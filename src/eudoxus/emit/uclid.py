@@ -37,6 +37,7 @@ keywords = set(
         "bmc",
         "check",
         "print_results",
+        "globally",
     ]
 )
 
@@ -126,9 +127,43 @@ def specs2ucl(output, spec: e.Expression, indent):
         case e.BooleanValue(_, True):
             return
     space = "  " * indent
-    output.write(f"{space}invariant spec: ")
+    if LTLinSpec(spec):
+        output.write(f"{space}property[LTL]: ")
+    else:
+        output.write(f"{space}invariant spec: ")
     expr2ucl(output, spec)
     output.write(";\n\n")
+
+
+def LTLinSpec(spec) -> bool:
+    """
+    Tries to see if there is a LTL formula somewhere in the spec AST tree
+    by traversing through the tree.
+    Input:
+    - spec : e.Expression
+    Output:
+    - bool : Whether or not we were able to find an LTL Expression
+    [right now only support for G and /
+    early terminate if we see a `FunctionApplication` or `IntegerValue`]
+    """
+
+    # base case
+    if isinstance(spec, e.FunctionApplication) or isinstance(spec, e.IntegerValue):
+        return False
+    else:
+        if isinstance(spec, e.Globally):
+            return True
+        else:
+            spec_attrs = set(dir(spec))
+            arg1_result = False
+            arg2_result = False
+            # extend this for cases with multiple children
+            if "arg1" in spec_attrs:
+                arg1_result = LTLinSpec(spec.arg1)
+            elif "arg2" in spec_attrs:
+                arg2_result = LTLinSpec(spec.arg2)
+
+            return arg1_result or arg2_result
 
 
 def control2ucl(output, control: p.Command, indent):
@@ -405,6 +440,10 @@ def expr2ucl(output, expr: e.Expression):
             type2ucl(output, t)
             output.write(") :: ")
             expr2ucl(output, body)
+            output.write(")")
+        case e.Globally(_, arg):
+            output.write("G(")
+            expr2ucl(output, arg)
             output.write(")")
         case e.FunctionApplication(_, name, args):
             name = id2str(name)

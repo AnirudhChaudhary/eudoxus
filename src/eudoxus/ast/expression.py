@@ -212,3 +212,13 @@ class Nondet(Node):
 @dataclass(frozen=True)
 class HoleExpr(Expression):
     pass
+
+
+@dataclass(frozen=True)
+class LTL(Expression):
+    pass
+
+
+@dataclass(frozen=True)
+class Globally(LTL):
+    arg1: Expression

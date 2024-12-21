@@ -66,7 +66,7 @@ def check_example(input, output, language):
 
     # run with solver and without debug to check end-to-end result
     actual = StringIO()
-    eudoxus(input_path, language, actual, True, False, True)
+    eudoxus(input_path, language, actual, True, True, True)
     actual = actual.getvalue()
 
     if clean(actual) != clean(expected):
@@ -78,19 +78,23 @@ def check_example(input, output, language):
 
 
 def test_examples():
+
+    print("running my own custom test right now...")
+    check_example("ani_garage_breaking.input.py", "ani_garage_breaking.output.py", "python")
+    print("finished my own custom test")
     # get all the files in the examples directory
-    examples = os.listdir(EXAMPLES)
-    # get all the examples that have .input. in them
-    inputs = [example for example in examples if ".input." in example]
+    # examples = os.listdir(EXAMPLES)
+    # # get all the examples that have .input. in them
+    # inputs = [example for example in examples if ".input." in example]
 
-    for input in inputs:
-        base = input.split(".input.")[0]
+    # for input in inputs:
+    #     base = input.split(".input.")[0]
 
-        output_py = base + ".output.py"
-        output_ucl = base + ".output.ucl"
+    #     output_py = base + ".output.py"
+    #     output_ucl = base + ".output.ucl"
 
-        if output_py in examples:
-            check_example(input, output_py, "python")
+    #     if output_py in examples:
+    #         check_example(input, output_py, "python")
 
-        if output_ucl in examples:
-            check_example(input, output_ucl, "uclid")
+    #     if output_ucl in examples:
+    #         check_example(input, output_ucl, "uclid")

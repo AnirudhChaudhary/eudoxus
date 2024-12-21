@@ -192,6 +192,7 @@ class TypeChecker(Checker):
         return self.symbol_map[symbol]
 
     def encode(self, cls, pos, children) -> Node:
+        # print("encoding: ", cls, pos, children)
         match cls:
             case m.Module:
                 # Hard: type(spec') == bool
@@ -1197,6 +1198,12 @@ class TypeChecker(Checker):
                 holep = self.fresh_constant(self.universe.expr, "HoleExpr")
                 self.add_soft_constraint(hole == holep, pos, "hole")
                 return holep
+            case e.Globally:
+                # bt = self.universe.type.BooleanType
+                # btp = self.fresh_constant(self.universe.type, "BooleanTypeHole")
+                # self.add_soft_constraint(bt == btp, pos, "bad_type")
+                # return btp
+                return self.universe.expr.Globally(children[0])
             case s.HoleStmt:
                 # Input: ??
                 # Soft: ?? == ??'

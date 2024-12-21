@@ -87,7 +87,7 @@ def specs2py(output, spec: e.Expression, indent):
     space = "  " * indent
     output.write(f"{space}def specification(self):\n")
     output.write(f"{space}  return ")
-    expr2py(output, spec)
+    expr2py(output, spec)  # don't need to worry about for globally
     output.write("\n\n")
 
 
@@ -191,6 +191,8 @@ def type2py(output, type: t.Type):
 
 
 def expr2py(output, expr: e.Expression):
+    # print("output: ", output)
+    # print("expr: ", expr)
     match expr:
         case e.BooleanValue(_, value) | e.IntegerValue(_, value):
             output.write(repr(value))
@@ -342,6 +344,13 @@ def expr2py(output, expr: e.Expression):
             type2py(output, t)
             output.write(", ")
             expr2py(output, body)
+            output.write(")")
+        case e.Globally(_, arg1):
+            output.write("G(")
+            print("here")
+            expr2py(
+                output, arg1
+            )  # recursive function, converting everything inside before moving on
             output.write(")")
         case e.FunctionApplication(_, f, args) if isinstance(f, e.Identifier):
             output.write("self." + f.name)

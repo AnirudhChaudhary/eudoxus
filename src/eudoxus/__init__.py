@@ -19,6 +19,7 @@ from eudoxus.repair.duplicate import DuplicateChecker
 from eudoxus.repair.input import InputChecker
 from eudoxus.repair.instance import InstanceChecker
 from eudoxus.repair.locals import LocalChecker
+from eudoxus.repair.ltl_repair import LTLChecker
 from eudoxus.repair.nondet import NondetChecker
 from eudoxus.repair.quantifier import QuantifierChecker
 from eudoxus.repair.scope import ScopeChecker
@@ -159,12 +160,15 @@ def repair(src, language, output, inference, debug, solver):
     else:
         src = src.encode()
 
+    # print("src: ", src)
     modules = Parser(src, debug).parse()
+    # print("modules: ", modules)
     # filter out any empty modules named Module
     modules = [m for m in modules if not m.is_empty()]
 
     if inference:
         checkers = [
+            LTLChecker,
             InputChecker,
             NondetChecker,
             InstanceChecker,
@@ -176,6 +180,7 @@ def repair(src, language, output, inference, debug, solver):
             DeclaredChecker,
             DuplicateChecker,
         ]
+        checkers = [LTLChecker]
         # Type last: adds missing types using a MAX-SMT solver
         if solver:
             checkers.append(TypeChecker)
@@ -190,7 +195,10 @@ def repair(src, language, output, inference, debug, solver):
             rewrites = checker().check(modules)
 
         for rewrite in rewrites:
+            print(f"module before checker: {checker} : {modules[0]}")
             rewriter = Rewriter(rewrite)
             modules = [rewriter.rewrite(m) for m in modules]
+            # if checker == LTLChecker:
+            # print(f"module after checker: {checker} : {modules[0]}")
 
     write()

@@ -419,6 +419,9 @@ class Parser:
                             f"Unsupported object: {len(arguments.children)}"
                         )
                     return e.HoleExpr(self.fpos())
+            case "g" | "globally":
+                arguments, kwargs = parse_args()
+                return e.Globally(self.fpos(), arguments[0])
             case _:
                 arguments, kwargs = parse_args()
                 return self.expr_helper(self.fpos(), function.name, arguments, kwargs)
