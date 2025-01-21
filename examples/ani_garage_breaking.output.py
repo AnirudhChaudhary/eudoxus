@@ -4,7 +4,7 @@ class Garage(Module):
 
   def inputs(self):
     self.enter_car = bool
-    self.leave_car = ??
+    self.leave_car = bool
 
   def init(self):
     self.num_cars = 0
@@ -16,4 +16,4 @@ class Garage(Module):
       self.num_cars = (self.num_cars - 1)
 
   def specification(self):
-    return G((self.num_cars >= 0))
+    return (G((self.num_cars >= 0)) and G((self.num_cars >= 1)))

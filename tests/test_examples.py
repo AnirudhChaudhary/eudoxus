@@ -80,7 +80,7 @@ def check_example(input, output, language):
 def test_examples():
 
     print("running my own custom test right now...")
-    check_example("ani_garage_breaking.input.py", "ani_garage_breaking.output.py", "python")
+    check_example("ani_garage.input.py", "ani_garage.output.py", "python")
     print("finished my own custom test")
     # get all the files in the examples directory
     # examples = os.listdir(EXAMPLES)

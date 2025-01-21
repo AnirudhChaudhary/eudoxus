@@ -180,7 +180,6 @@ def repair(src, language, output, inference, debug, solver):
             DeclaredChecker,
             DuplicateChecker,
         ]
-        checkers = [LTLChecker]
         # Type last: adds missing types using a MAX-SMT solver
         if solver:
             checkers.append(TypeChecker)
@@ -195,10 +194,7 @@ def repair(src, language, output, inference, debug, solver):
             rewrites = checker().check(modules)
 
         for rewrite in rewrites:
-            print(f"module before checker: {checker} : {modules[0]}")
             rewriter = Rewriter(rewrite)
             modules = [rewriter.rewrite(m) for m in modules]
-            # if checker == LTLChecker:
-            # print(f"module after checker: {checker} : {modules[0]}")
 
     write()

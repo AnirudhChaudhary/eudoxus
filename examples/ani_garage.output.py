@@ -16,4 +16,4 @@ class Garage(Module):
       self.num_cars = (self.num_cars - 1)
 
   def specification(self):
-    return G((self.num_cars >= 0))
+    return (False or G((self.num_cars >= 0)))

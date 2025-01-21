@@ -222,3 +222,18 @@ class LTL(Expression):
 @dataclass(frozen=True)
 class Globally(LTL):
     arg1: Expression
+
+
+@dataclass(frozen=True)
+class Finally(LTL):
+    arg1: Expression
+
+
+@dataclass(frozen=True)
+class Next(LTL):
+    arg1: Expression
+
+
+@dataclass(frozen=True)
+class Until(LTL):
+    arg1: Expression

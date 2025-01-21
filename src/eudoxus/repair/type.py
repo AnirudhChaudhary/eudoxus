@@ -197,9 +197,13 @@ class TypeChecker(Checker):
             case m.Module:
                 # Hard: type(spec') == bool
                 # Soft: spec == spec'
+                print("children: ", children)
                 spec = children[9]
                 spec_pos = self.z3_to_pos(spec)
                 spec_depth = self.get_depth(spec)
+                print("spec: ", spec)
+                print("term to type: ", self.term_to_type)
+                print("term to type spec: ", self.term_to_type(spec))
                 self.add_soft_constraint(
                     self.term_to_type(spec) == self.universe.type.BooleanType,
                     spec_pos,

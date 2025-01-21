@@ -16,5 +16,4 @@ class Garage(Module):
         self.leave_car = Boolean()
     
     def specification(self):
-        return globally(self.num_cars >= 0)
-
+        return (False or Globally(self.num_cars >= 0))

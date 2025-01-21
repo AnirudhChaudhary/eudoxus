@@ -28,17 +28,17 @@ class LTLChecker(Checker):
         #     self.recent_decl_pos = pos
         if cls == n.Identifier:
             if children[0] == "Globally":
-                print(
-                    f"AHHHHHH GLOBALLY so the closest parent to {pos} needs to be rewritten"
-                )
+                # print(
+                #     f"AHHHHHH GLOBALLY so the closest parent to {pos} needs to be rewritten"
+                # )
                 self.needs_rewrite.append(pos)
                 # self.rewrites[pos] = HoleId(pos)
 
         if cls == e.Globally:
             if pos not in self.position_mappings[self.allowed_pos[0]]:
-                print(
-                    "i found a globally that was defined in the ast that I don't like"
-                )
+                # print(
+                #     "i found a globally that was defined in the ast that I don't like"
+                # )
                 # TODO: May need to handle the rewriting here separately
                 self.rewrites[pos] = HoleId(pos)
 
@@ -74,7 +74,7 @@ class LTLChecker(Checker):
         """
 
         # we have the parent mapping
-        print(f"cls: {cls} Decl = ? {cls == s.InputDecl}")
+        # print(f"cls: {cls} Decl = ? {cls == s.InputDecl}")
 
         # Go through all the flagged positions who's parents we need to search
         for _pos in self.potential_parents_to_rewrite:
@@ -82,14 +82,14 @@ class LTLChecker(Checker):
 
             # establishes all of the positions that should have a replaced parent
             for par_pos in self.potential_parents_to_rewrite[_pos]:
-                print(f"pos {pos} | _pos {_pos} | par_pos {par_pos}")
+                # print(f"pos {pos} | _pos {_pos} | par_pos {par_pos}")
                 # if the parent position is the same as the position
                 if par_pos == pos:
                     # and that it is the smallest
                     if _pos not in self.best_replacable_parent:
                         # this line is suspicious because unless it's an inputDecl, then it won't work
                         if issubclass(cls, s.Declaration):
-                            print("changed best replacable parent to: ", par_pos)
+                            # print("changed best replacable parent to: ", par_pos)
                             self.best_replacable_parent[_pos] = par_pos
                         else:
                             continue
@@ -100,7 +100,7 @@ class LTLChecker(Checker):
                         # , s.VariableDecl, s.LocalDecl, s.OutputDecl, s.SharedDecl, s.TypeDecl, s.InstanceDecl):
                         if issubclass(cls, s.Declaration):
                             self.best_replacable_parent[_pos] = par_pos
-                            print("changed best replacable parent")
+                            # print("changed best replacable parent")
         return (pos, *children)
 
     def pull_from_tuple(self, _tuple):
@@ -172,6 +172,7 @@ class LTLChecker(Checker):
         }
 
         """
+        # print("HELLO I AM IN MAP PARENTS")
         for parent_pos in self.position_mappings:
             for child_pos in self.position_mappings[parent_pos]:
                 if child_pos not in self.parents_mapping:
@@ -180,6 +181,9 @@ class LTLChecker(Checker):
                     parent_pos not in self.parents_mapping
                 ):  # this is to handle the one edge case of the root
                     self.parents_mapping[parent_pos] = set()
+                # print("mapping: ", self.parents_mapping)
+                # print("child pos: ", child_pos)
+                # print("specific mapping: ", self.parents_mapping[child_pos])
                 self.parents_mapping[child_pos].add(parent_pos)
 
         # the code beneath is to handle adding your parents parent
@@ -211,20 +215,22 @@ class LTLChecker(Checker):
         """
         # print("doing the LTL CHECKER")
         self.rewrites = {}
-        self.allow_LTL = False
-        self.position_mappings = {}
-        self.recent_decl_pos = None
-        self.parents_mapping = {}
-        self.needs_rewrite = []
-        self.potential_parents_to_rewrite = {}
-        self.best_replacable_parent = {}
 
         for module in modules:
+            self.rewrites = {}
+            self.allow_LTL = False
+            self.position_mappings = {}
+            self.recent_decl_pos = None
+            self.parents_mapping = {}
+            self.needs_rewrite = []
+            self.potential_parents_to_rewrite = {}
+            self.best_replacable_parent = {}
+
             # mapping children
             # print("module: ", module)
             module.visit(self.map_children)
             self.map_parents()
-            print("child mappings: ", self.position_mappings)
+            # print("child mappings: ", self.position_mappings)
             # print("parents mapping: ", self.parents_mapping)
             # print("position mappings: ", self.position_mappings)
 
@@ -244,7 +250,7 @@ class LTLChecker(Checker):
                 self.potential_parents_to_rewrite[pos] = self.parents_mapping[pos]
 
             module.visit(self.find_best_rewritable_parent)
-            print("best replacable parents: ", self.best_replacable_parent)
+            # print("best replacable parents: ", self.best_replacable_parent)
 
             # for attr in ("init","inputs","instances","is_empty","locals","name"
             # ,"next","outputs","position","sharedvars","specification","traverse",
@@ -269,7 +275,7 @@ class LTLChecker(Checker):
                                         type=t.HoleType(position=item.type.position),
                                     )
 
-            print("rewrites: ", self.rewrites)
+            # print("rewrites: ", self.rewrites)
             # print("ending allowed pos: ", self.allowed_pos)
 
         return [self.rewrites]

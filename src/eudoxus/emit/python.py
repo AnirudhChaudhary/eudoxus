@@ -347,7 +347,6 @@ def expr2py(output, expr: e.Expression):
             output.write(")")
         case e.Globally(_, arg1):
             output.write("G(")
-            print("here")
             expr2py(
                 output, arg1
             )  # recursive function, converting everything inside before moving on

@@ -1,4 +1,26 @@
 # README for ani thoughts
+01.21.2025
+Beginning to implement all of the other LTL operators so that I can begin initial tests with using LLM in the pipeline
+    - not exactly sure how to implement all of the LTL operators because they all have different semantics
+
+Making sure that changes to the LTL checker are not affecting the other tests
+    - Turns out for each module, you have to reinitialize all of the dictionaries, found this out because a module was being overwritten
+
+Completed:
+- Created adhoc fix
+- Most test cases except the xor one are passing right now
+Error:
+- XOR test is not working right now, it wsays that there is a ValueError Error: ['xor self']. I am not sure if this is because it is not yet handled but I removed my LTL checker and it was still having the same error
+    It could be because of soem python versioning but I will have to test this by going to the released version and then checking if the test is still failing there
+
+Checking to find out why the regular output is having a z3 sort error while the breaking one is not
+ - Could not find out the actual solution but the error was happening in the type_to_spec function. I'm not exactly sure what it does but I was able to create a adhoc fix by adding a "False or" statement to the specification. It seems to work when the specification return is a boolean and not when it is standalone. This will need further investigation but this is the current.
+
+
+
+Questions:
+1. How should Next operator be handled? There is already a next statement that is created
+2. Do all of the LTL properties have the same arguments present?
 
 Problem: The traversal of the children in the ast is not as expected so I am running into issues finding the most recent Decl for a "Globally" keyword.
 - I also need to generalize the code so that it can handle a variety of cases.
