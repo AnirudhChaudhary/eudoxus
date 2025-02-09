@@ -1,0 +1,41 @@
+module ThermostatModule {
+  var deltaTime: integer;
+  var heatOn: boolean;
+  var temp: integer;
+  var time: integer;
+
+  init {
+    if (temp <= 20) {
+      heatOn = true;
+      time = 30;
+    } else {
+      heatOn = false;
+      time = 0;
+    }
+
+  }
+  next {
+    if (heatOn) {
+      if ((temp > 20) && (time >= 30)) {
+        heatOn' = false;
+        time' = 0;
+      } else {
+        time' = (time + 30);
+      }
+    } else {
+      if ((deltaTime >= 120) && (temp <= 20)) {
+        heatOn' = true;
+        time' = 30;
+      } else {
+        if (temp <= 20) {
+          time' = (time + 30);
+        } else {
+          time' = 0;
+        }
+      }
+    }
+
+  }
+  invariant spec: (((temp <= 20) && (deltaTime >= 120)) == heatOn);
+
+}

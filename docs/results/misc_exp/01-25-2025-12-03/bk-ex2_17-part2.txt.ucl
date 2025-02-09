@@ -1,0 +1,38 @@
+module TrafficLights {
+  var nondet_1: boolean;
+  var green1: boolean;
+  var green2: boolean;
+  var red1: boolean;
+  var red2: boolean;
+
+  init {
+    red1 = true;
+    green1 = false;
+    red2 = true;
+    green2 = false;
+
+  }
+  next {
+    havoc nondet_1;
+    if (red1 && red2) {
+      if (nondet_1) {
+        green1' = true;
+      } else {
+        green2' = true;
+      }
+    } else {
+      if (green1 && red2) {
+        green1' = false;
+        red1' = true;
+      } else {
+        if (red1 && green2) {
+          green2' = false;
+          red2' = true;
+        }
+      }
+    }
+
+  }
+  invariant spec: (green1 || green2);
+
+}

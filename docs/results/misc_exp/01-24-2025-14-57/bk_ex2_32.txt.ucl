@@ -1,0 +1,52 @@
+module Sender {
+  type Bit = bv5;
+  type Message = bv8;
+  type ControlBit = Bit;
+
+  input c: Message;
+
+  output d: Message;
+  output b: ControlBit;
+
+}
+module Receiver {
+  type Bit = bv5;
+  type Message = bv8;
+  type ControlBit = Bit;
+
+  var b: bv8;
+
+  input d: Message;
+
+  output c: Message;
+
+  next {
+    c' = d;
+    b' = d;
+
+  }
+}
+module System {
+  type Bit = bv5;
+  type Message = bv8;
+  type ControlBit = Bit;
+
+  var b: integer;
+  var c: bv3;
+  var d: bv4;
+
+  instance S: Sender(b:(b), c:(c), d:(d));
+  instance R: Receiver(c:(c), d:(d));
+
+  next {
+    if (c != S.d) {
+      S.c' = c;
+      S.b' = b;
+    }
+    if (d != R.c) {
+      R.d' = d;
+      R.b' = b;
+    }
+
+  }
+}

@@ -1,0 +1,47 @@
+module FerryPuzzle {
+  var cabbage: boolean;
+  var ferryman: boolean;
+  var goat: boolean;
+  var wolf: boolean;
+  var objects: enum { CABBAGE, FERRYMAN, GOAT, WOLF };
+  var locations: record { LEFT: boolean, RIGHT: boolean };
+
+  init {
+    ferryman = locations.LEFT;
+    goat = locations.LEFT;
+    cabbage = locations.LEFT;
+    wolf = locations.LEFT;
+
+  }
+  next {
+    if (ferryman == locations.LEFT) {
+      if (goat == locations.LEFT) {
+        if (cabbage == locations.LEFT) {
+          cabbage' = locations.RIGHT;
+        }
+      }
+      if (wolf == locations.LEFT) {
+        if (goat == locations.LEFT) {
+          goat' = locations.RIGHT;
+        }
+      }
+    } else {
+      if (ferryman == locations.RIGHT) {
+        if (goat == locations.RIGHT) {
+          if (cabbage == locations.RIGHT) {
+            cabbage' = locations.LEFT;
+          }
+        }
+        if (wolf == locations.RIGHT) {
+          if (goat == locations.RIGHT) {
+            goat' = locations.LEFT;
+          }
+        }
+      }
+    }
+    ferryman' = (if (ferryman == locations.LEFT) then locations.RIGHT else locations.LEFT);
+
+  }
+  invariant spec: (!((goat == wolf) && (ferryman != goat)) && !((goat == cabbage) && (ferryman != goat)));
+
+}

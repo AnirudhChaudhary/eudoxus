@@ -1,0 +1,39 @@
+module Thermostat {
+  var heater_on: boolean;
+  var off_temperature_low_limit: real;
+  var on_temperature_high_limit: real;
+
+  input temp: real;
+
+  output heatOn: boolean;
+  output heatOff: boolean;
+
+  init {
+    heater_on = false;
+    heatOn = false;
+    heatOff = false;
+
+  }
+  next {
+    if (heater_on) {
+      if (temp >= on_temperature_high_limit) {
+        heater_on' = false;
+        heatOff' = true;
+        heatOn' = false;
+      } else {
+        heatOff' = false;
+        heatOn' = false;
+      }
+    } else {
+      if (temp <= off_temperature_low_limit) {
+        heater_on' = true;
+        heatOn' = true;
+        heatOff' = false;
+      } else {
+        heatOn' = false;
+        heatOff' = false;
+      }
+    }
+
+  }
+}

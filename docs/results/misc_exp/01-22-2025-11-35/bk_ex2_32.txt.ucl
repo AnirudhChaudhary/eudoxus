@@ -1,0 +1,76 @@
+module Sender {
+  type Message = bv8;
+  type ControlBit = boolean;
+
+  var bool: boolean;
+  var b: boolean;
+  var c: [integer]Message;
+  var m: [integer]Message;
+  var sending: boolean;
+
+  input ack: ControlBit;
+
+  output d: [integer]Message;
+
+  init {
+    sending = bool;
+    sending = false;
+
+  }
+  next {
+    if (sending) {
+      if (ack != b) {
+        d' = c;
+      } else {
+        sending' = false;
+      }
+    } else {
+      c' = m;
+      b' = !b;
+      sending' = true;
+    }
+
+  }
+}
+module Receiver {
+  type Message = bv8;
+  type ControlBit = boolean;
+
+  var bool: boolean;
+  var b: boolean;
+  var m: [integer]Message;
+  var receiving: boolean;
+
+  input d: [integer]Message;
+
+  output c: [integer]Message;
+  output ack: ControlBit;
+
+  init {
+    receiving = bool;
+    receiving = false;
+
+  }
+  next {
+    if (receiving) {
+      ack' = b;
+      receiving' = false;
+    } else {
+      m' = d;
+      receiving' = true;
+    }
+
+  }
+}
+module Communication {
+  type Message = bv8;
+  type ControlBit = boolean;
+
+  var ack: real;
+  var c: bv2;
+  var d: bv3;
+
+  instance S: Sender(ack:(ack), d:(d));
+  instance R: Receiver(ack:(ack), c:(c), d:(d));
+
+}

@@ -1,0 +1,68 @@
+module Module {
+  var arrival: integer;
+  var departure: integer;
+  var counter: integer;
+  var i: integer;
+  var count: integer;
+  var value: integer;
+
+  instance arrival_detector: ArrivalDetector(event:(arrival));
+  instance departure_detector: DepartureDetector(event:(departure));
+  instance counter_actor: Counter();
+  instance display: Display();
+
+  init {
+    arrival = 0;
+    departure = 0;
+    counter = 0;
+    i = 0;
+    count = i;
+    value = 0;
+
+  }
+  procedure step()
+    modifies arrival;
+    modifies counter;
+    modifies departure;
+  {
+    if arrival_detector.event {
+      arrival = (arrival + 1);
+      counter = (counter + 1);
+      display.value = counter;
+    }
+    if departure_detector.event {
+      departure = (departure + 1);
+      counter = (counter - 1);
+      display.value = counter;
+    }
+  }
+
+  next {
+    call step();
+  }
+}
+module ArrivalDetector {
+  input event: boolean;
+
+}
+module DepartureDetector {
+  input event: boolean;
+
+}
+module Counter {
+  var i: integer;
+  var count: integer;
+
+  init {
+    count = i;
+
+  }
+  next {
+    count' = count;
+
+  }
+}
+module Display {
+  var value: integer;
+
+}

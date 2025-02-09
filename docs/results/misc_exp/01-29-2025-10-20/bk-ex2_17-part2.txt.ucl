@@ -1,0 +1,50 @@
+module TrafficLight {
+  type State = boolean;
+
+  var nondet_1: integer;
+  var random_choice: integer;
+  var red1: State;
+  var green1: State;
+  var red2: State;
+  var green2: State;
+
+  init {
+    red1 = true;
+    green1 = false;
+    red2 = true;
+    green2 = false;
+
+  }
+  next {
+    havoc nondet_1;
+    if (red1 && red2) {
+      random_choice' = nondet_1;
+      if (random_choice == 1) {
+        red1' = false;
+        green1' = true;
+        red2' = true;
+        green2' = false;
+      } else {
+        red2' = false;
+        green2' = true;
+        red1' = true;
+        green1' = false;
+      }
+    } else {
+      if (green1) {
+        green1' = false;
+        red1' = true;
+        red2' = false;
+        green2' = true;
+      } else {
+        if (green2) {
+          green2' = false;
+          red2' = true;
+          red1' = false;
+          green1' = true;
+        }
+      }
+    }
+
+  }
+}

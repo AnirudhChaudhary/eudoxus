@@ -1,0 +1,56 @@
+module VendingMachine {
+  var max: integer;
+  var nsoda: integer;
+  var nbeer: integer;
+  var sget: boolean;
+  var bget: boolean;
+  var refill: boolean;
+  var coin: boolean;
+  var ret_coin: boolean;
+
+  init {
+    nsoda = 0;
+    nbeer = 0;
+    sget = false;
+    bget = false;
+    refill = false;
+    coin = false;
+    ret_coin = false;
+
+  }
+  procedure step()
+    modifies coin;
+    modifies bget;
+    modifies nsoda;
+    modifies ret_coin;
+    modifies nbeer;
+    modifies sget;
+  {
+    coin = true;
+    ret_coin = ((nsoda == 0) && (nbeer == 0));
+    if (nsoda > 0) {
+      sget = true;
+    } else {
+      sget = false;
+    }
+    if (nbeer > 0) {
+      bget = true;
+    } else {
+      bget = false;
+    }
+    if (refill) {
+      nsoda = max;
+      nbeer = max;
+    }
+    if (sget) {
+      nsoda = (nsoda - 1);
+    }
+    if (bget) {
+      nbeer = (nbeer - 1);
+    }
+  }
+
+  next {
+    call step();
+  }
+}

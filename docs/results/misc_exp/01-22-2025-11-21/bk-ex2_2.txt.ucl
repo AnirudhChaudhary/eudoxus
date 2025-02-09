@@ -1,0 +1,49 @@
+module BeverageVendingMachine {
+  var coin_inserted: boolean;
+  var coin_inserted_next: boolean;
+  var current_state_next: enum { beer, get_beer, get_soda, insert_coin, pay, select, soda };
+  var current_state: enum { beer, get_beer, get_soda, insert_coin, pay, select, soda };
+
+  input user_action: enum { beer, get_beer, get_soda, insert_coin, pay, select, soda };
+
+  init {
+    current_state = pay;
+    coin_inserted = false;
+
+  }
+  procedure step()
+    modifies coin_inserted;
+    modifies current_state_next;
+    modifies current_state;
+    modifies coin_inserted_next;
+  {
+    coin_inserted_next = coin_inserted;
+    current_state_next = current_state;
+    if (current_state == pay) {
+      if (user_action == insert_coin) {
+        coin_inserted_next = true;
+        current_state_next = select;
+      }
+    } else {
+      if (current_state == select) {
+        if ((user_action == get_soda) && coin_inserted) {
+          current_state_next = soda;
+          coin_inserted_next = false;
+        } else {
+          if ((user_action == get_beer) && coin_inserted) {
+            current_state_next = beer;
+            coin_inserted_next = false;
+          }
+        }
+      }
+    }
+    coin_inserted = coin_inserted_next;
+    current_state = current_state_next;
+  }
+
+  next {
+    call step();
+  }
+  invariant spec: (coin_inserted == ((current_state == soda) || (current_state == beer)));
+
+}

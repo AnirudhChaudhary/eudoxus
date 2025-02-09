@@ -1,0 +1,47 @@
+module TrafficLight {
+  var count: integer;
+  var next_count: integer;
+  var pedestrian: boolean;
+  var next_state: enum { GREEN, PENDING, RED, YELLOW };
+  var state: enum { GREEN, PENDING, RED, YELLOW };
+
+  output sigG: boolean;
+  output sigY: boolean;
+  output sigR: boolean;
+
+  init {
+    state = RED;
+    count = 0;
+    pedestrian = false;
+    next_count = (if (count < 60) then (count + 1) else 0);
+    next_state = state;
+    if (state == RED) {
+      next_state = (if (count == 60) then GREEN else RED);
+    } else {
+      if (state == GREEN) {
+        if (pedestrian) {
+          next_state = (if (count >= 60) then YELLOW else PENDING);
+        } else {
+          next_state = GREEN;
+        }
+      } else {
+        if (state == YELLOW) {
+          next_state = (if (count == 65) then RED else YELLOW);
+        } else {
+          if (state == PENDING) {
+            next_state = PENDING;
+          }
+        }
+      }
+    }
+    sigG = (state == GREEN);
+    sigY = (state == YELLOW);
+    sigR = (state == RED);
+
+  }
+  next {
+    count' = next_count;
+    state' = next_state;
+
+  }
+}

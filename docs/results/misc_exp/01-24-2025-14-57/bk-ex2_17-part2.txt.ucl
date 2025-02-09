@@ -1,0 +1,48 @@
+module TrafficLight {
+  type TrafficLightState = integer;
+
+  var nondet_1: boolean;
+  var red1: TrafficLightState;
+  var green1: TrafficLightState;
+  var red2: TrafficLightState;
+  var green2: TrafficLightState;
+
+  init {
+    red1 = 1;
+    red2 = 1;
+
+  }
+  next {
+    havoc nondet_1;
+    if ((red1 == 1) && (red2 == 1)) {
+      if (nondet_1) {
+        green1' = 1;
+      } else {
+        green2' = 1;
+      }
+    } else {
+      if ((red1 == 1) && (green2 == 1)) {
+        green2' = 0;
+        red1' = 0;
+      } else {
+        if ((green1 == 1) && (red2 == 1)) {
+          green1' = 0;
+          red1' = 0;
+        } else {
+          if ((red2 == 1) && (green1 == 1)) {
+            green1' = 0;
+            red2' = 0;
+          } else {
+            if ((green2 == 1) && (red1 == 1)) {
+              green2' = 0;
+              red2' = 0;
+            }
+          }
+        }
+      }
+    }
+
+  }
+  invariant spec: ((green1 == 1) || (green2 == 1));
+
+}

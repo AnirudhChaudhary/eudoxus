@@ -1,0 +1,46 @@
+module VendingMachine {
+  var state: enum { beer, pay, select, soda };
+  var coin_inserted: boolean;
+  var soda_delivered: boolean;
+  var beer_delivered: boolean;
+
+  input select_soda: boolean;
+  input select_beer: boolean;
+
+  init {
+    coin_inserted = false;
+    soda_delivered = false;
+    beer_delivered = false;
+
+  }
+  procedure step()
+    modifies state;
+    modifies soda_delivered;
+    modifies beer_delivered;
+  {
+    if (state == pay) {
+      if (select_soda) {
+        state = select;
+      }
+      if (select_beer) {
+        state = select;
+      }
+    }
+    if (state == select) {
+      if (coin_inserted) {
+        if (select_soda) {
+          soda_delivered = true;
+        }
+        if (select_beer) {
+          beer_delivered = true;
+        }
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+  invariant spec: ((coin_inserted && soda_delivered) || (coin_inserted && beer_delivered));
+
+}

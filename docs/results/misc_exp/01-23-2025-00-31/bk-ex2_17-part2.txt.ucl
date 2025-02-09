@@ -1,0 +1,48 @@
+module ParallelTrafficLights {
+  var green1: boolean;
+  var green2: boolean;
+  var nondet_1: boolean;
+  var red1: boolean;
+  var red2: boolean;
+
+  init {
+    red1 = true;
+    green1 = false;
+    red2 = true;
+    green2 = false;
+
+  }
+  procedure step()
+    modifies green1;
+    modifies red2;
+    modifies red1;
+    modifies nondet_1;
+    modifies green2;
+  {
+    havoc nondet_1;
+    havoc nondet_1;
+    if (red1 && red2) {
+      if (nondet_1) {
+        if (nondet_1) {
+          green1 = true;
+        } else {
+          green2 = true;
+        }
+      }
+    } else {
+      if (green1 && !red2) {
+        green1 = false;
+        red1 = true;
+      } else {
+        if (green2 && !red1) {
+          green2 = false;
+          red2 = true;
+        }
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+}

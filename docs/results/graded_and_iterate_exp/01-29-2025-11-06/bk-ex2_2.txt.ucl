@@ -1,0 +1,56 @@
+module VendingMachine {
+  type Bit = integer;
+
+  var current_state: Bit;
+  var coin_inserted: Bit;
+  var soda_delivered: Bit;
+  var beer_delivered: Bit;
+
+  input insert_coin: boolean;
+
+  init {
+    current_state = 0;
+    coin_inserted = 0;
+
+  }
+  next {
+    if (current_state == 0) {
+      if (insert_coin) {
+        coin_inserted' = 1;
+        current_state' = 1;
+      }
+    } else {
+      if (current_state == 1) {
+        if (soda_delivered || beer_delivered) {
+          coin_inserted' = 0;
+          current_state' = 2;
+        } else {
+          if (insert_coin) {
+            soda_delivered' = 1;
+            current_state' = 2;
+          } else {
+            beer_delivered' = 1;
+            current_state' = 2;
+          }
+        }
+      } else {
+        if (current_state == 2) {
+          soda_delivered' = 1;
+          current_state' = 0;
+        } else {
+          beer_delivered' = 1;
+          current_state' = 0;
+        }
+      }
+    }
+
+  }
+  invariant spec: ((((soda_delivered + beer_delivered) + current_state) + coin_inserted) == 1);
+
+  control {
+    induction(1);
+    check;
+    print_results;
+
+  }
+}

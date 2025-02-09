@@ -1,0 +1,38 @@
+module RailroadControlSystem {
+  type Train = record { ??: boolean, ??: boolean, ??: boolean, ??: boolean, in: record {  }, near: record {  }, far: boolean, in: boolean };
+
+  var controller_state: integer;
+  var train_state: Train;
+  var gate_state: record {  };
+
+  init {
+    train_state = train_state.far;
+    controller_state = 0;
+    gate_state = gate_state.closing;
+
+  }
+  next {
+    if ((train_state == train_state.near) && (controller_state == 0)) {
+      controller_state' = 1;
+    } else {
+      if (controller_state == 1) {
+        if (gate_state == gate_state.down) {
+          controller_state' = 2;
+        }
+      } else {
+        if ((train_state == train_state.in) && (controller_state == 2)) {
+          controller_state' = 3;
+        } else {
+          if (controller_state == 3) {
+            if (gate_state == gate_state.down) {
+              controller_state' = 0;
+            }
+          }
+        }
+      }
+    }
+
+  }
+  invariant spec: ((gate_state != gate_state.up) || (train_state != train_state.in));
+
+}

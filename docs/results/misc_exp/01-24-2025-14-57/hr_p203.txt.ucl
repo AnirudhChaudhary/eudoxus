@@ -1,0 +1,27 @@
+module AlternatingBitProtocol {
+  var i: boolean;
+  var st: record { bits: bv1 };
+  var message1: bv8;
+  var message2: boolean;
+  var ack: record { bits: bv1 };
+
+  next {
+    if (st.bits[0] == ack.bits[0]) {
+      i' = (message2 == i);
+      st' = ack;
+    } else {
+      if (st.bits[0] != ack.bits[0]) {
+        ack' = st;
+      }
+    }
+
+  }
+  invariant spec: (st.bits[0] != ack.bits[0]);
+
+  control {
+    induction(1);
+    check;
+    print_results;
+
+  }
+}

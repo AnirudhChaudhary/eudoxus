@@ -1,0 +1,60 @@
+module RailroadCrossing {
+  var GateState: record { up: boolean, down: boolean };
+  var TrainState: record { far: boolean, in: boolean, near: boolean };
+  var train_state: boolean;
+  var gate_state: boolean;
+  var controller_state: integer;
+
+  init {
+    train_state = TrainState.far;
+    gate_state = GateState.up;
+    controller_state = 0;
+
+  }
+  next {
+    if (controller_state == 0) {
+      if (train_state == TrainState.near) {
+        controller_state' = 1;
+      }
+    } else {
+      if (controller_state == 1) {
+        if (gate_state == GateState.up) {
+          controller_state' = 2;
+        }
+      } else {
+        if (controller_state == 2) {
+          if (train_state == TrainState.in) {
+            controller_state' = 3;
+          }
+        } else {
+          if (controller_state == 3) {
+            if (gate_state == GateState.down) {
+              controller_state' = 0;
+            }
+          }
+        }
+      }
+    }
+    if (controller_state == 0) {
+      train_state' = TrainState.far;
+    } else {
+      if (controller_state == 1) {
+        train_state' = TrainState.near;
+      } else {
+        if (controller_state == 2) {
+          train_state' = TrainState.in;
+        } else {
+          if (controller_state == 3) {
+            train_state' = TrainState.far;
+          }
+        }
+      }
+    }
+    if ((controller_state == 0) || (controller_state == 3)) {
+      gate_state' = GateState.up;
+    } else {
+      gate_state' = GateState.down;
+    }
+
+  }
+}

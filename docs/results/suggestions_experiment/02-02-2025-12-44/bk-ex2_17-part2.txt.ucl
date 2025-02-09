@@ -1,0 +1,56 @@
+module TrafficLights {
+  var choice: boolean;
+  var red1: boolean;
+  var green1: boolean;
+  var red2: boolean;
+  var green2: boolean;
+  var duration_counter: integer;
+
+  init {
+    red1 = true;
+    green1 = false;
+    red2 = true;
+    green2 = false;
+    duration_counter = 0;
+
+  }
+  procedure step()
+    modifies green2;
+    modifies green1;
+    modifies duration_counter;
+    modifies red2;
+    modifies red1;
+  {
+    if (red1 && red2) {
+      if (choice == true) {
+        green1 = true;
+        red1 = false;
+      } else {
+        green2 = true;
+        red2 = false;
+      }
+    }
+    if (green1) {
+      duration_counter = (duration_counter + 1);
+      if (duration_counter == 5) {
+        green1 = false;
+        red1 = true;
+        duration_counter = 0;
+      }
+    }
+    if (green2) {
+      duration_counter = (duration_counter + 1);
+      if (duration_counter == 5) {
+        green2 = false;
+        red2 = true;
+        duration_counter = 0;
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+  invariant spec: ((red1 ==> !green1) && (red2 ==> !green2));
+
+}

@@ -1,0 +1,35 @@
+module AlternatingBitProtocol {
+  var message1: integer;
+  var message2: integer;
+  var st: integer;
+  var control_: integer;
+
+  output ack: bv1;
+
+  next {
+    if (st == 0) {
+      control_' = 0;
+    } else {
+      if (st == 1) {
+        control_' = 1;
+      }
+    }
+    if (control_ == 0) {
+      message1' = 123;
+    } else {
+      if (control_ == 1) {
+        message2' = 456;
+      }
+    }
+    if (ack == 0bv1) {
+      st' = 0;
+    } else {
+      if (ack == 1bv1) {
+        st' = 1;
+      }
+    }
+
+  }
+  invariant spec: (((((st == 0) && (control_ == 0)) && (message1 == 123)) && (ack == 0bv1)) || ((((st == 1) && (control_ == 1)) && (message2 == 456)) && (ack == 1bv1)));
+
+}

@@ -1,0 +1,100 @@
+module TrafficLightControl {
+  type Switch = bv2;
+
+  var main_timer: integer;
+  var secondary_timer: integer;
+  var vehicle_detected: boolean;
+  var current_light_main: enum { Green, Red, Yellow };
+  var current_light_secondary: enum { Green, Red, Yellow };
+
+  input detect_vehicle: Switch;
+
+  output mG: boolean;
+  output mY: boolean;
+  output mR: boolean;
+  output sG: boolean;
+  output sY: boolean;
+  output sR: boolean;
+
+  init {
+    main_timer = 180;
+    secondary_timer = 0;
+    current_light_main = Green;
+    current_light_secondary = Red;
+    vehicle_detected = false;
+
+  }
+  procedure step()
+    modifies main_timer;
+    modifies mG;
+    modifies mY;
+    modifies current_light_main;
+    modifies vehicle_detected;
+    modifies mR;
+    modifies sY;
+    modifies sR;
+    modifies current_light_secondary;
+    modifies secondary_timer;
+    modifies sG;
+  {
+    if (detect_vehicle == 1bv2) {
+      vehicle_detected = true;
+    }
+    if (current_light_main == Green) {
+      if (vehicle_detected) {
+        current_light_main = Yellow;
+        main_timer = 5;
+      } else {
+        main_timer = (main_timer - 1);
+        if (main_timer <= 0) {
+          current_light_main = Yellow;
+          main_timer = 5;
+        }
+      }
+    } else {
+      if (current_light_main == Yellow) {
+        main_timer = (main_timer - 1);
+        if (main_timer <= 0) {
+          current_light_main = Red;
+          main_timer = 55;
+          current_light_secondary = Green;
+          secondary_timer = 50;
+        }
+      } else {
+        if (current_light_main == Red) {
+          main_timer = (main_timer - 1);
+          secondary_timer = (secondary_timer - 1);
+          if (secondary_timer <= 0) {
+            current_light_secondary = Yellow;
+            secondary_timer = 5;
+          }
+          if ((main_timer <= 0) && (current_light_secondary == Yellow)) {
+            current_light_main = Green;
+            main_timer = 180;
+            vehicle_detected = false;
+          }
+        }
+      }
+    }
+    if (current_light_secondary == Yellow) {
+      secondary_timer = (secondary_timer - 1);
+      if (secondary_timer <= 0) {
+        current_light_secondary = Red;
+        current_light_main = Green;
+        main_timer = 180;
+      }
+    }
+    mG = (current_light_main == Green);
+    mY = (current_light_main == Yellow);
+    mR = (current_light_main == Red);
+    sG = (current_light_secondary == Green);
+    sY = (current_light_secondary == Yellow);
+    sR = (current_light_secondary == Red);
+  }
+
+  next {
+    call step();
+  }
+  invariant spec: (((mG || mY) && !mR) && ((sG || sY) && !sR));
+
+}

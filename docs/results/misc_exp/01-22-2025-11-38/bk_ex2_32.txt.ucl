@@ -1,0 +1,79 @@
+module MyModule {
+  type Message = bv8;
+  type ControlBit = bv1;
+
+  var msg_to_send: Message;
+  var ack_expected: ControlBit;
+  var timeout: bv32;
+
+  input ack_received: ControlBit;
+
+  output c: Message;
+  output b: ControlBit;
+
+  init {
+    msg_to_send = 0bv8;
+    ack_expected = 0bv1;
+    timeout = 10bv32;
+
+  }
+  next {
+    if ((timeout == 0bv32) || (ack_received != ack_expected)) {
+      c' = msg_to_send;
+    } else {
+      ack_expected' = ack_received;
+      timeout' = 10bv32;
+    }
+
+  }
+}
+module Sender {
+  type Message = bv8;
+  type ControlBit = bv1;
+
+  var msg_to_send: Message;
+  var ack_expected: ControlBit;
+  var timeout: bv32;
+
+  input ack_received: ControlBit;
+
+  output c: Message;
+  output b: ControlBit;
+
+  init {
+    msg_to_send = 0bv8;
+    ack_expected = 0bv1;
+    timeout = 10bv32;
+
+  }
+  next {
+    if ((timeout == 0bv32) || (ack_received != ack_expected)) {
+      c' = msg_to_send;
+    } else {
+      ack_expected' = ack_received;
+      timeout' = 10bv32;
+    }
+
+  }
+}
+module Receiver {
+  type Message = bv8;
+  type ControlBit = bv1;
+
+  var msg_received: Message;
+
+  input b: ControlBit;
+
+  output d: Message;
+  output ack_to_send: ControlBit;
+
+  init {
+    msg_received = 0bv8;
+    ack_to_send = 0bv1;
+
+  }
+  next {
+    d' = msg_received;
+
+  }
+}

@@ -1,0 +1,45 @@
+module ABPModule {
+  type Bit = bv1;
+  type Msg = bv8;
+
+  var channel_ack: bv1;
+  var channel_message: bv8;
+  var st: Bit;
+  var ack: Bit;
+  var message1: Msg;
+  var message2: Msg;
+
+  input message_loss: boolean;
+  input ack_loss: boolean;
+
+  output sent_message: Msg;
+  output sent_ack: Bit;
+
+  init {
+    st = 0bv1;
+    ack = 0bv1;
+    message1 = 0bv8;
+    message2 = 0bv8;
+
+  }
+  next {
+    if (!message_loss) {
+      channel_message' = message1;
+    }
+    if (!ack_loss) {
+      channel_ack' = ack;
+    }
+    if (channel_ack == st) {
+      st' = (1bv1 - st);
+    }
+    if (channel_ack == st) {
+      message2' = channel_message;
+      ack' = st;
+    }
+    sent_message' = message2;
+    sent_ack' = ack;
+
+  }
+  invariant spec: ((ack == st) || ((ack == (1bv1 - st)) && (sent_ack != st)));
+
+}

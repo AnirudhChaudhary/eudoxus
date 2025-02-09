@@ -1,0 +1,49 @@
+module Automobile {
+  var ignition: boolean;
+  var time: integer;
+  var warn: boolean;
+  var beep: boolean;
+  var light: boolean;
+  var timer_running: boolean;
+
+  init {
+    light = false;
+    beep = false;
+    timer_running = false;
+
+  }
+  procedure step()
+    modifies warn;
+    modifies beep;
+    modifies time;
+    modifies timer_running;
+  {
+    if (ignition && warn) {
+      warn = true;
+      if (!timer_running) {
+        timer_running = true;
+        time = 30;
+      }
+      if (time > 0) {
+        time = (time - 1);
+        if (!beep) {
+          beep = true;
+        }
+      }
+    } else {
+      warn = false;
+      if (timer_running) {
+        timer_running = false;
+        time = 0;
+      }
+      if (beep) {
+        beep = false;
+        time = 0;
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+}

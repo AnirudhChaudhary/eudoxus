@@ -1,0 +1,45 @@
+module TrafficLight {
+  var nondet_1: boolean;
+  var nondet_2: boolean;
+  var nondet_3: boolean;
+  var nondet_4: boolean;
+  var state1: enum { Green1, Red1 };
+  var state2: enum { Green2, Red2 };
+
+  init {
+    state1 = Red1;
+    state2 = Red2;
+
+  }
+  next {
+    havoc nondet_4;
+    havoc nondet_3;
+    havoc nondet_2;
+    havoc nondet_1;
+    if (state1 == Red1) {
+      if (nondet_1) {
+        state1' = Green1;
+      }
+    } else {
+      if (state1 == Green1) {
+        if (nondet_2) {
+          state1' = Red1;
+        }
+      }
+    }
+    if (state2 == Red2) {
+      if (nondet_3) {
+        state2' = Green2;
+      }
+    } else {
+      if (state2 == Green2) {
+        if (nondet_4) {
+          state2' = Red2;
+        }
+      }
+    }
+
+  }
+  invariant spec: !((state1 == Green1) && (state2 == Green2));
+
+}

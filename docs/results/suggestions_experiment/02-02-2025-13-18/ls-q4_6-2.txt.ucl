@@ -1,0 +1,43 @@
+module Module {
+  var buckled: boolean;
+  var ignition: boolean;
+  var elapsed_time: integer;
+  var beeping: boolean;
+  var warning_light: boolean;
+
+  input warn_sensor: boolean;
+  input nowarn_sensor: boolean;
+
+  init {
+    elapsed_time = 0;
+    beeping = false;
+    warning_light = false;
+    ignition = false;
+    buckled = true;
+
+  }
+  next {
+    if (ignition) {
+      if (warn_sensor && !buckled) {
+        warning_light' = true;
+        if (elapsed_time < 30) {
+          elapsed_time' = (elapsed_time + 1);
+          beeping' = true;
+        } else {
+          beeping' = false;
+        }
+      } else {
+        warning_light' = false;
+        beeping' = false;
+        elapsed_time' = 0;
+      }
+    } else {
+      elapsed_time' = 0;
+      beeping' = false;
+      warning_light' = false;
+    }
+
+  }
+  invariant spec: ((warning_light == (warn_sensor && !buckled)) && (beeping == (elapsed_time < 30)));
+
+}

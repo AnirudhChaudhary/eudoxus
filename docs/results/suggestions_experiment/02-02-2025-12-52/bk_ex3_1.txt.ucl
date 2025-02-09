@@ -1,0 +1,45 @@
+module TrafficLights {
+  type Range = integer;
+
+  var green1: enum { green, red };
+  var red1: enum { green, red };
+  var green2: enum { green, red };
+  var red2: enum { green, red };
+  var internal_clock: boolean;
+  var timer: Range;
+
+  input A: boolean;
+  input B: boolean;
+
+  next {
+    if (internal_clock || (timer == 10)) {
+      timer' = 0;
+      if (green1 == green) {
+        red1' = red;
+        green2' = green;
+      } else {
+        red1' = green;
+        green2' = red;
+      }
+    } else {
+      if (A) {
+        green1' = (if (red1 == red) then green else red);
+        red2' = (if (green2 == green) then red else green);
+      }
+      if (B) {
+        red1' = (if (green1 == green) then red else green);
+        green2' = (if (red2 == red) then green else red);
+      }
+      timer' = (timer + 1);
+    }
+
+  }
+  invariant spec: !((red1 == red) && (green2 == green));
+
+  control {
+    induction(1);
+    check;
+    print_results;
+
+  }
+}

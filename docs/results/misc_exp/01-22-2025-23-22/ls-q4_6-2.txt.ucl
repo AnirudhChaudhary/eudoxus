@@ -1,0 +1,60 @@
+module SeatBeltWarningModule {
+  var seat_belt_unbuckled: boolean;
+  var beeper_active: boolean;
+  var beeper_timer: integer;
+
+  input warn: boolean;
+  input nowarn: boolean;
+  input ignition: boolean;
+
+  output beeper: boolean;
+  output warning_light: boolean;
+
+  init {
+    seat_belt_unbuckled = false;
+    beeper_active = false;
+    beeper_timer = 0;
+    beeper = false;
+    warning_light = false;
+
+  }
+  procedure step()
+    modifies seat_belt_unbuckled;
+    modifies beeper;
+    modifies warning_light;
+    modifies beeper_timer;
+    modifies beeper_active;
+  {
+    if (ignition) {
+      if (nowarn) {
+        seat_belt_unbuckled = false;
+      }
+      if (warn) {
+        seat_belt_unbuckled = true;
+        beeper_active = true;
+        beeper_timer = 30;
+      }
+    }
+    if (!ignition) {
+      seat_belt_unbuckled = false;
+      beeper_active = false;
+      beeper_timer = 0;
+    }
+    if (beeper_active) {
+      if (seat_belt_unbuckled && (beeper_timer > 0)) {
+        beeper = true;
+        beeper_timer = (beeper_timer - 1);
+      } else {
+        beeper = false;
+        beeper_active = false;
+      }
+    }
+    warning_light = seat_belt_unbuckled;
+  }
+
+  next {
+    call step();
+  }
+  invariant spec: ((!beeper_active || beeper) && (warning_light == seat_belt_unbuckled));
+
+}

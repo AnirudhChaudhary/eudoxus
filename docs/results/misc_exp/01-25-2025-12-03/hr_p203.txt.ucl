@@ -1,0 +1,39 @@
+module AlternatingBitProtocol {
+  var st: boolean;
+  var sender_control: boolean;
+  var receiver_control: boolean;
+
+  input sender_message: boolean;
+  input receiver_message: boolean;
+
+  init {
+    st = true;
+    sender_control = false;
+    receiver_control = false;
+
+  }
+  next {
+    if (st) {
+      if (sender_control) {
+        if (receiver_message == sender_message) {
+          receiver_control' = !receiver_control;
+          st' = !st;
+        }
+      } else {
+        sender_control' = !sender_control;
+      }
+    } else {
+      if (receiver_control) {
+        if (sender_message == receiver_message) {
+          sender_control' = !sender_control;
+          st' = !st;
+        }
+      } else {
+        receiver_control' = !receiver_control;
+      }
+    }
+
+  }
+  invariant spec: ((st && sender_control) || (!st && receiver_control));
+
+}

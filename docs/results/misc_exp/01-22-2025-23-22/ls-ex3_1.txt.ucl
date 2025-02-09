@@ -1,0 +1,53 @@
+module Module {
+  next {
+    ??;
+
+  }
+}
+module CarCounterModule {
+  var current_count: integer;
+
+  input arrival: boolean;
+  input departure: boolean;
+
+  output counter_output: integer;
+
+  init {
+    current_count = 0;
+
+  }
+  procedure step()
+    modifies current_count;
+    modifies counter_output;
+  {
+    if (arrival) {
+      current_count = (current_count + 1);
+    }
+    if (departure) {
+      current_count = (current_count - 1);
+    }
+    counter_output = current_count;
+  }
+
+  next {
+    call step();
+  }
+  invariant spec: (current_count >= 0);
+
+}
+module ArrivalDetector {
+  output arrival: boolean;
+
+  next {
+    arrival' = true;
+
+  }
+}
+module DepartureDetector {
+  output departure: boolean;
+
+  next {
+    departure' = true;
+
+  }
+}

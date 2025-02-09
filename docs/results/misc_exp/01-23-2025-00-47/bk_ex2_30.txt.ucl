@@ -1,0 +1,35 @@
+module RailroadCrossing {
+  var train_state: bv2;
+  var gate_state: bv1;
+  var controller_state: integer;
+
+  next {
+    if (controller_state == 0) {
+      if (train_state == 1bv2) {
+        controller_state' = 1;
+      }
+    } else {
+      if (controller_state == 1) {
+        controller_state' = 2;
+      } else {
+        if (controller_state == 2) {
+          if (train_state == 2bv2) {
+            controller_state' = 3;
+          }
+        } else {
+          if (controller_state == 3) {
+            controller_state' = 0;
+          }
+        }
+      }
+    }
+    if (controller_state == 1) {
+      gate_state' = 1bv1;
+    } else {
+      if (controller_state == 3) {
+        gate_state' = 0bv1;
+      }
+    }
+
+  }
+}

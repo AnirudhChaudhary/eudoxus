@@ -1,0 +1,48 @@
+module BeverageVendingMachine {
+  var action: enum { bget, coin, refill, ret_coin, select, sget, start };
+  var max_capacity: integer;
+  var nbeer: integer;
+  var nsoda: integer;
+  var state: enum { select, start };
+
+  procedure step()
+    modifies nsoda;
+    modifies state;
+    modifies action;
+    modifies nbeer;
+  {
+    if (state == start) {
+      action = action;
+      if (action == coin) {
+        state = select;
+      } else {
+        if (action == refill) {
+          nsoda = max_capacity;
+          nbeer = max_capacity;
+        }
+      }
+    } else {
+      if (state == select) {
+        action = action;
+        if ((action == sget) && (nsoda > 0)) {
+          nsoda = (nsoda - 1);
+          state = start;
+        } else {
+          if ((action == bget) && (nbeer > 0)) {
+            nbeer = (nbeer - 1);
+            state = start;
+          } else {
+            if ((nsoda == 0) && (nbeer == 0)) {
+              action = ret_coin;
+              state = start;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+}

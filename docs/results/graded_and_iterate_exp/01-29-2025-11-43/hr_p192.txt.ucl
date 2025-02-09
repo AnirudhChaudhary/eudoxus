@@ -1,0 +1,24 @@
+module Module {
+  type BitVec = bv1;
+
+  var request: BitVec;
+  var request_next: BitVec;
+
+  init {
+    status.init_ = status.status;
+
+  }
+  next {
+    request_next' = (?? - (if (request) then 1bv1 else 0bv1));
+    status.next_' = (if (request) then status.next_ else status);
+
+  }
+  invariant spec: ((request == 1bv1) && (status.status == status.init_));
+
+  control {
+    induction(1);
+    check;
+    print_results;
+
+  }
+}

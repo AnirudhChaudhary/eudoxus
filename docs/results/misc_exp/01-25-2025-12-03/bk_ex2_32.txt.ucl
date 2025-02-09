@@ -1,0 +1,47 @@
+module Channel {
+  var data: record { a: bv8 };
+
+}
+module Sender {
+  var c: bv8;
+  var B: boolean;
+  var M: integer;
+
+  next {
+    if (c <= 255bv8) {
+      c' = (c + 1bv8);
+    } else {
+      c' = 0bv8;
+    }
+    if Channel.data.a {
+      M' = (M + 1);
+      B' = !B;
+    }
+
+  }
+}
+module Receiver {
+  var d: bv8;
+  var B: boolean;
+  var M: integer;
+
+  input Channel: boolean;
+
+  next {
+    if (Channel) {
+      d' = (d + 1bv8);
+      M' = (M + 1);
+      B' = !B;
+    }
+
+  }
+}
+module System {
+  instance S: Sender(Channel:(b));
+  instance R: Receiver(Channel:(d));
+  instance c: Channel();
+  instance d: Channel();
+  instance b: Channel();
+  instance a: Channel();
+
+}

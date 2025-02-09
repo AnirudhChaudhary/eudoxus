@@ -1,0 +1,34 @@
+module VendingMachine {
+  var state: enum { beer, pay, select, soda };
+  var coin_inserted: boolean;
+  var drink_delivered: boolean;
+
+  init {
+    state = pay;
+    coin_inserted = false;
+    drink_delivered = false;
+
+  }
+  next {
+    if ((state == pay) && coin_inserted) {
+      state' = select;
+    } else {
+      if ((state == select) && coin_inserted) {
+        if (drink_delivered) {
+          state' = beer;
+        } else {
+          state' = pay;
+        }
+      } else {
+        if ((state == beer) || (state == soda)) {
+          if (drink_delivered) {
+            state' = pay;
+          } else {
+            state' = select;
+          }
+        }
+      }
+    }
+
+  }
+}

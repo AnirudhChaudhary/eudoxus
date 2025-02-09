@@ -1,0 +1,516 @@
+[12:13:45] ╭───────────────────────────────────────────────────────────────────── 🤖 Prompt: ──────────────────────────────────────────────────────────────────────╮ utils.py:24
+           │ Write Python code that extends the `Module` class below to complete the following task.                                                               │            
+           │                                                                                                                                                       │            
+           │ > Consider the intersection of two one-way streets, called Main and Secondary. A light on each street controls its traffic. Each light goes through a │            
+           │ cycle consisting of a red (R), green (G), and yellow (Y) phases. It is a safety requirement that when one light is in its green or yellow phase, the  │            
+           │ other is in its red phase. The yellow phase is always 5 seconds long. The traffic lights operate as follows. A sensor in the secondary road detects a │            
+           │ vehicle. While no vehicle is detected, there is a 4 minute-long cycle with the main light having 3 minutes of green, 5 seconds of yellow, and 55      │            
+           │ seconds of red. The secondary light is red for 3 minutes and 5 seconds (while the main light is green and yellow), green for 50 seconds, then yellow  │            
+           │ for 5 seconds. If a vehicle is detected on the secondary road, the traffic light quickly gives a right of way to the secondary road. When this        │            
+           │ happens, the main light aborts its green phase and immediately switches to its 5 second yellow phase. If the vehicle is detected while the main light │            
+           │ is yellow or red, the system continues as if there were no vehicle. Model a system that controls the lights. Let this system have six pure outputs,   │            
+           │ one for each light, named mG, mY, and mR, to designate the main light being green, yellow, or red, respectively, and sG, sY, and sR, to designate the │            
+           │ secondary light being green, yellow, or red, respectively. These signals should be generated to turn on a light. You can implicitly assume that when  │            
+           │ one light is turned on, whichever has been on is turned off. Use the variable names mG, mY, mR, sG, sY, sR.                                           │            
+           │                                                                                                                                                       │            
+           │ Reply with your Python code inside one unique code block.                                                                                             │            
+           │                                                                                                                                                       │            
+           │ ```python                                                                                                                                             │            
+           │ class Module:                                                                                                                                         │            
+           │     """An abstract class to represent a UCLID5 module."""                                                                                             │            
+           │                                                                                                                                                       │            
+           │     def types(self):                                                                                                                                  │            
+           │         """(Optional) Defines the type declarations.                                                                                                  │            
+           │         For example, the following implementation defines a 8-bit type called T:                                                                      │            
+           │         ```                                                                                                                                           │            
+           │         def types(self):                                                                                                                              │            
+           │             self.T = BitVector(8)                                                                                                                     │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def locals(self):                                                                                                                                 │            
+           │         """(Optional) Defines the local variables and their types.                                                                                    │            
+           │         For example, the following implementation defines an 8-bit variable x                                                                         │            
+           │         and an integer variable y:                                                                                                                    │            
+           │         ```                                                                                                                                           │            
+           │         def locals(self):                                                                                                                             │            
+           │             self.x = BitVector(8)                                                                                                                     │            
+           │             self.y = Integer()                                                                                                                        │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def inputs(self):                                                                                                                                 │            
+           │         """(Optional) Defines the input variables and their types.                                                                                    │            
+           │         For example, the following implementation defines an input variable x,                                                                        │            
+           │         which is an array of 8-bit bitvectors indexed by 2-bit bitvectors:                                                                            │            
+           │         ```                                                                                                                                           │            
+           │         def inputs(self):                                                                                                                             │            
+           │             self.x = Array(BitVector(2), BitVector(8))                                                                                                │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def outputs(self):                                                                                                                                │            
+           │         """(Optional) Defines the output variables and their types.                                                                                   │            
+           │         For example, the following implementation defines an output variable y,                                                                       │            
+           │         which is a real number:                                                                                                                       │            
+           │         ```                                                                                                                                           │            
+           │         def outputs(self):                                                                                                                            │            
+           │             self.y = Real()                                                                                                                           │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def shared_vars(self):                                                                                                                            │            
+           │         """(Optional) Defines the shared variables and their types.                                                                                   │            
+           │         For example, the following implementation defines a shared variable z,                                                                        │            
+           │         which is an array of booleans indexed by integers:                                                                                            │            
+           │         ```                                                                                                                                           │            
+           │         def shared_vars(self):                                                                                                                        │            
+           │             self.z = Array(Integer(), Boolean())                                                                                                      │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def instances(self):                                                                                                                              │            
+           │         """(Optional) Defines the instances of other modules and relates their                                                                        │            
+           │         input, output, and shared variables to local variables. Every instance                                                                        │            
+           │         variable must be related to a local variable. For example, let M be                                                                           │            
+           │         another module with inputs x and y, and output z. The following                                                                               │            
+           │         implementation defines an instance of M called m, and connects M's                                                                            │            
+           │         input variable x to the local variable self.a, M's input variable y to                                                                        │            
+           │         the local variable self.b, and M's output variable z to the local                                                                             │            
+           │         variable self.c:                                                                                                                              │            
+           │         ```                                                                                                                                           │            
+           │         def instances(self):                                                                                                                          │            
+           │             self.m = M(x=self.a, y=self.b, z=self.c)                                                                                                  │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def init(self):                                                                                                                                   │            
+           │         """(Optional) Defines how variables are initialized.                                                                                          │            
+           │         For example, the following implementation initializes x to 0 if y is                                                                          │            
+           │         greater than or equal to 20:                                                                                                                  │            
+           │         ```                                                                                                                                           │            
+           │         def init(self):                                                                                                                               │            
+           │             if self.y >= 20:                                                                                                                          │            
+           │                 self.x = 0                                                                                                                            │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def next(self):                                                                                                                                   │            
+           │         """(Optional) Defines the transition relation.                                                                                                │            
+           │         For example, the following implementation increments x or decrements y                                                                        │            
+           │         depending on z:                                                                                                                               │            
+           │         ```                                                                                                                                           │            
+           │         def next(self):                                                                                                                               │            
+           │             if self.z:                                                                                                                                │            
+           │                 self.x = self.x + 1                                                                                                                   │            
+           │             else:                                                                                                                                     │            
+           │                 self.y = self.y - 1                                                                                                                   │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def specification(self):                                                                                                                          │            
+           │         """(Optional) Defines the specification in terms of invariant properties.                                                                     │            
+           │                                                                                                                                                       │            
+           │         Returns:                                                                                                                                      │            
+           │             bool: True if the specification is satisfied, False otherwise.                                                                            │            
+           │                                                                                                                                                       │            
+           │         For example, the following implementation defines two invariants:                                                                             │            
+           │         ```                                                                                                                                           │            
+           │         def specification(self):                                                                                                                      │            
+           │             return self.x < 10 and self.y > 0                                                                                                         │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def proof(self):                                                                                                                                  │            
+           │         """(Optional) Defines the control block.                                                                                                      │            
+           │         For example, the following implementation uses 1-induction to prove                                                                           │            
+           │         that the specification always holds:                                                                                                          │            
+           │         ```                                                                                                                                           │            
+           │         def proof(self):                                                                                                                              │            
+           │             induction(1)                                                                                                                              │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │ ```                                                                                                                                                   │            
+           │                                                                                                                                                       │            
+           │ I can definitely do that! Here is the Python code:                                                                                                    │            
+           │ ```python                                                                                                                                             │            
+           │                                                                                                                                                       │            
+           ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯            
+[12:13:50] ╭─────────────────────────── 🧠 Response: ────────────────────────────╮                                                                                   utils.py:42
+           │ class Module:                                                       │                                                                                              
+           │     """An abstract class to represent a UCLID5 module."""           │                                                                                              
+           │                                                                     │                                                                                              
+           │     def types(self):                                                │                                                                                              
+           │         """Defines the type declarations."""                        │                                                                                              
+           │         self.mG = Boolean()                                         │                                                                                              
+           │         self.mY = Boolean()                                         │                                                                                              
+           │         self.mR = Boolean()                                         │                                                                                              
+           │         self.sG = Boolean()                                         │                                                                                              
+           │         self.sY = Boolean()                                         │                                                                                              
+           │         self.sR = Boolean()                                         │                                                                                              
+           │                                                                     │                                                                                              
+           │     def locals(self):                                               │                                                                                              
+           │         """Defines the local variables and their types."""          │                                                                                              
+           │         self.secondary_vehicle_detected = Boolean()                 │                                                                                              
+           │         self.main_phase = Integer(3)                                │                                                                                              
+           │         self.secondary_phase = Integer(3)                           │                                                                                              
+           │         self.timer = Integer(0)                                     │                                                                                              
+           │                                                                     │                                                                                              
+           │     def inputs(self):                                               │                                                                                              
+           │         """Defines the input variables and their types."""          │                                                                                              
+           │         self.secondary_vehicle_detected = Boolean()                 │                                                                                              
+           │                                                                     │                                                                                              
+           │     def outputs(self):                                              │                                                                                              
+           │         """Defines the output variables and their types."""         │                                                                                              
+           │         self.mG = Boolean()                                         │                                                                                              
+           │         self.mY = Boolean()                                         │                                                                                              
+           │         self.mR = Boolean()                                         │                                                                                              
+           │         self.sG = Boolean()                                         │                                                                                              
+           │         self.sY = Boolean()                                         │                                                                                              
+           │         self.sR = Boolean()                                         │                                                                                              
+           │                                                                     │                                                                                              
+           │     def init(self):                                                 │                                                                                              
+           │         """Defines how variables are initialized."""                │                                                                                              
+           │         self.main_phase = 0                                         │                                                                                              
+           │         self.secondary_phase = 0                                    │                                                                                              
+           │                                                                     │                                                                                              
+           │     def next(self):                                                 │                                                                                              
+           │         """Defines the transition relation."""                      │                                                                                              
+           │         # Check if a vehicle is detected on the secondary road      │                                                                                              
+           │         if self.secondary_vehicle_detected and self.main_phase > 0: │                                                                                              
+           │             self.main_phase = 2                                     │                                                                                              
+           │             self.secondary_phase = 2                                │                                                                                              
+           │         elif self.timer < 4 * 60:                                   │                                                                                              
+           │             # Main light cycle when no vehicle is detected          │                                                                                              
+           │             if self.main_phase == 0:                                │                                                                                              
+           │                 self.timer += 1                                     │                                                                                              
+           │                 if self.timer >= 3 * 60:                            │                                                                                              
+           │                     self.main_phase = 1                             │                                                                                              
+           │             elif self.main_phase == 1:                              │                                                                                              
+           │                 self.timer += 1                                     │                                                                                              
+           │                 if self.timer >= 3 * 60 + 5:                        │                                                                                              
+           │                     self.main_phase = 2                             │                                                                                              
+           │                     self.timer = 0                                  │                                                                                              
+           │         else:                                                       │                                                                                              
+           │             # Secondary light cycle when no vehicle is detected     │                                                                                              
+           │             if self.secondary_phase == 0:                           │                                                                                              
+           │                 self.timer += 1                                     │                                                                                              
+           │                 if self.timer >= 3 * 60 + 5:                        │                                                                                              
+           │                     self.secondary_phase = 1                        │                                                                                              
+           │                     self.timer = 0                                  │                                                                                              
+           │             elif self.secondary_phase == 1:                         │                                                                                              
+           │                 self.timer += 1                                     │                                                                                              
+           │                 if self.timer >= 50:                                │                                                                                              
+           │                     self.secondary_phase = 2                        │                                                                                              
+           │                     self.timer = 0                                  │                                                                                              
+           │             elif self.secondary_phase == 2:                         │                                                                                              
+           │                 self.timer += 1                                     │                                                                                              
+           │                 if self.timer >= 5:                                 │                                                                                              
+           │                     self.secondary_phase = 0                        │                                                                                              
+           │                     self.timer = 0                                  │                                                                                              
+           │                                                                     │                                                                                              
+           │         # Set the output signals based on the phases                │                                                                                              
+           │         self.mG = self.main_phase == 0                              │                                                                                              
+           │         self.mY = self.main_phase == 1                              │                                                                                              
+           │         self.mR = self.main_phase == 2                              │                                                                                              
+           │         self.sG = self.secondary_phase == 0                         │                                                                                              
+           │         self.sY = self.secondary_phase == 1                         │                                                                                              
+           │         self.sR = self.secondary_phase == 2                         │                                                                                              
+           │ ```                                                                 │                                                                                              
+           ╰─────────────────────────────────────────────────────────────────────╯                                                                                              
+           ╭─────────────────────────── 🤖 Extracted: ───────────────────────────╮                                                                                   utils.py:24
+           │                                                                     │                                                                                              
+           │ class Module:                                                       │                                                                                              
+           │     """An abstract class to represent a UCLID5 module."""           │                                                                                              
+           │                                                                     │                                                                                              
+           │     def types(self):                                                │                                                                                              
+           │         """Defines the type declarations."""                        │                                                                                              
+           │         self.mG = Boolean()                                         │                                                                                              
+           │         self.mY = Boolean()                                         │                                                                                              
+           │         self.mR = Boolean()                                         │                                                                                              
+           │         self.sG = Boolean()                                         │                                                                                              
+           │         self.sY = Boolean()                                         │                                                                                              
+           │         self.sR = Boolean()                                         │                                                                                              
+           │                                                                     │                                                                                              
+           │     def locals(self):                                               │                                                                                              
+           │         """Defines the local variables and their types."""          │                                                                                              
+           │         self.secondary_vehicle_detected = Boolean()                 │                                                                                              
+           │         self.main_phase = Integer(3)                                │                                                                                              
+           │         self.secondary_phase = Integer(3)                           │                                                                                              
+           │         self.timer = Integer(0)                                     │                                                                                              
+           │                                                                     │                                                                                              
+           │     def inputs(self):                                               │                                                                                              
+           │         """Defines the input variables and their types."""          │                                                                                              
+           │         self.secondary_vehicle_detected = Boolean()                 │                                                                                              
+           │                                                                     │                                                                                              
+           │     def outputs(self):                                              │                                                                                              
+           │         """Defines the output variables and their types."""         │                                                                                              
+           │         self.mG = Boolean()                                         │                                                                                              
+           │         self.mY = Boolean()                                         │                                                                                              
+           │         self.mR = Boolean()                                         │                                                                                              
+           │         self.sG = Boolean()                                         │                                                                                              
+           │         self.sY = Boolean()                                         │                                                                                              
+           │         self.sR = Boolean()                                         │                                                                                              
+           │                                                                     │                                                                                              
+           │     def init(self):                                                 │                                                                                              
+           │         """Defines how variables are initialized."""                │                                                                                              
+           │         self.main_phase = 0                                         │                                                                                              
+           │         self.secondary_phase = 0                                    │                                                                                              
+           │                                                                     │                                                                                              
+           │     def next(self):                                                 │                                                                                              
+           │         """Defines the transition relation."""                      │                                                                                              
+           │         # Check if a vehicle is detected on the secondary road      │                                                                                              
+           │         if self.secondary_vehicle_detected and self.main_phase > 0: │                                                                                              
+           │             self.main_phase = 2                                     │                                                                                              
+           │             self.secondary_phase = 2                                │                                                                                              
+           │         elif self.timer < 4 * 60:                                   │                                                                                              
+           │             # Main light cycle when no vehicle is detected          │                                                                                              
+           │             if self.main_phase == 0:                                │                                                                                              
+           │                 self.timer += 1                                     │                                                                                              
+           │                 if self.timer >= 3 * 60:                            │                                                                                              
+           │                     self.main_phase = 1                             │                                                                                              
+           │             elif self.main_phase == 1:                              │                                                                                              
+           │                 self.timer += 1                                     │                                                                                              
+           │                 if self.timer >= 3 * 60 + 5:                        │                                                                                              
+           │                     self.main_phase = 2                             │                                                                                              
+           │                     self.timer = 0                                  │                                                                                              
+           │         else:                                                       │                                                                                              
+           │             # Secondary light cycle when no vehicle is detected     │                                                                                              
+           │             if self.secondary_phase == 0:                           │                                                                                              
+           │                 self.timer += 1                                     │                                                                                              
+           │                 if self.timer >= 3 * 60 + 5:                        │                                                                                              
+           │                     self.secondary_phase = 1                        │                                                                                              
+           │                     self.timer = 0                                  │                                                                                              
+           │             elif self.secondary_phase == 1:                         │                                                                                              
+           │                 self.timer += 1                                     │                                                                                              
+           │                 if self.timer >= 50:                                │                                                                                              
+           │                     self.secondary_phase = 2                        │                                                                                              
+           │                     self.timer = 0                                  │                                                                                              
+           │             elif self.secondary_phase == 2:                         │                                                                                              
+           │                 self.timer += 1                                     │                                                                                              
+           │                 if self.timer >= 5:                                 │                                                                                              
+           │                     self.secondary_phase = 0                        │                                                                                              
+           │                     self.timer = 0                                  │                                                                                              
+           │                                                                     │                                                                                              
+           │         # Set the output signals based on the phases                │                                                                                              
+           │         self.mG = self.main_phase == 0                              │                                                                                              
+           │         self.mY = self.main_phase == 1                              │                                                                                              
+           │         self.mR = self.main_phase == 2                              │                                                                                              
+           │         self.sG = self.secondary_phase == 0                         │                                                                                              
+           │         self.sY = self.secondary_phase == 1                         │                                                                                              
+           │         self.sR = self.secondary_phase == 2                         │                                                                                              
+           ╰─────────────────────────────────────────────────────────────────────╯                                                                                              
+[12:13:51] ╭─────────────────────────── 🤖 Repaired: ────────────────────────────╮                                                                                   utils.py:24
+           │ class Module(Module):                                               │                                                                                              
+           │   def locals(self):                                                 │                                                                                              
+           │     self.main_phase = int                                           │                                                                                              
+           │     self.secondary_phase = int                                      │                                                                                              
+           │     self.timer = int                                                │                                                                                              
+           │                                                                     │                                                                                              
+           │   def inputs(self):                                                 │                                                                                              
+           │     self.secondary_vehicle_detected = bool                          │                                                                                              
+           │                                                                     │                                                                                              
+           │   def outputs(self):                                                │                                                                                              
+           │     self.mG = bool                                                  │                                                                                              
+           │     self.mY = bool                                                  │                                                                                              
+           │     self.mR = bool                                                  │                                                                                              
+           │     self.sG = bool                                                  │                                                                                              
+           │     self.sY = bool                                                  │                                                                                              
+           │     self.sR = bool                                                  │                                                                                              
+           │                                                                     │                                                                                              
+           │   def init(self):                                                   │                                                                                              
+           │     self.main_phase = 0                                             │                                                                                              
+           │     self.secondary_phase = 0                                        │                                                                                              
+           │                                                                     │                                                                                              
+           │   def next(self):                                                   │                                                                                              
+           │     if (self.secondary_vehicle_detected and (self.main_phase > 0)): │                                                                                              
+           │       self.main_phase = 2                                           │                                                                                              
+           │       self.secondary_phase = 2                                      │                                                                                              
+           │     else:                                                           │                                                                                              
+           │       if (self.timer < (4 * 60)):                                   │                                                                                              
+           │         if (self.main_phase == 0):                                  │                                                                                              
+           │           self.timer = (self.timer + 1)                             │                                                                                              
+           │           if (self.timer >= (3 * 60)):                              │                                                                                              
+           │             self.main_phase = 1                                     │                                                                                              
+           │         else:                                                       │                                                                                              
+           │           if (self.main_phase == 1):                                │                                                                                              
+           │             self.timer = (self.timer + 1)                           │                                                                                              
+           │             if (self.timer >= ((3 * 60) + 5)):                      │                                                                                              
+           │               self.main_phase = 2                                   │                                                                                              
+           │               self.timer = 0                                        │                                                                                              
+           │       else:                                                         │                                                                                              
+           │         if (self.secondary_phase == 0):                             │                                                                                              
+           │           self.timer = (self.timer + 1)                             │                                                                                              
+           │           if (self.timer >= ((3 * 60) + 5)):                        │                                                                                              
+           │             self.secondary_phase = 1                                │                                                                                              
+           │             self.timer = 0                                          │                                                                                              
+           │         else:                                                       │                                                                                              
+           │           if (self.secondary_phase == 1):                           │                                                                                              
+           │             self.timer = (self.timer + 1)                           │                                                                                              
+           │             if (self.timer >= 50):                                  │                                                                                              
+           │               self.secondary_phase = 2                              │                                                                                              
+           │               self.timer = 0                                        │                                                                                              
+           │           else:                                                     │                                                                                              
+           │             if (self.secondary_phase == 2):                         │                                                                                              
+           │               self.timer = (self.timer + 1)                         │                                                                                              
+           │               if (self.timer >= 5):                                 │                                                                                              
+           │                 self.secondary_phase = 0                            │                                                                                              
+           │                 self.timer = 0                                      │                                                                                              
+           │     self.mG = (self.main_phase == 0)                                │                                                                                              
+           │     self.mY = (self.main_phase == 1)                                │                                                                                              
+           │     self.mR = (self.main_phase == 2)                                │                                                                                              
+           │     self.sG = (self.secondary_phase == 0)                           │                                                                                              
+           │     self.sY = (self.secondary_phase == 1)                           │                                                                                              
+           │     self.sR = (self.secondary_phase == 2)                           │                                                                                              
+           │                                                                     │                                                                                              
+           │                                                                     │                                                                                              
+           ╰─────────────────────────────────────────────────────────────────────╯                                                                                              
+           ╭───────────────────────────────────────────────────────────────────── 🤖 Prompt:  ─────────────────────────────────────────────────────────────────────╮ utils.py:24
+           │ You are a grader. In the following example, I will give you a natural language description of a system that I want to model followed by my current    │            
+           │ model of the system.                                                                                                                                  │            
+           │ System Description: Consider the intersection of two one-way streets, called Main and Secondary.                                                      │            
+           │ A light on each street controls its traffic. Each light goes through a cycle consisting of a red (R), green (G), and yellow (Y) phases.               │            
+           │                                                                                                                                                       │            
+           │ It is a safety requirement that when one light is in its green or yellow phase, the other is in its red phase. The yellow phase is always 5 seconds   │            
+           │ long.                                                                                                                                                 │            
+           │                                                                                                                                                       │            
+           │ The traffic lights operate as follows.                                                                                                                │            
+           │ A sensor in the secondary road detects a vehicle. While no vehicle is detected, there is a 4 minute-long cycle with the main light having 3 minutes   │            
+           │ of green, 5 seconds of yellow, and 55 seconds of red. The secondary light is red for 3 minutes and 5 seconds (while the main light is green and       │            
+           │ yellow), green for 50 seconds, then yellow for 5 seconds.                                                                                             │            
+           │                                                                                                                                                       │            
+           │ If a vehicle is detected on the secondary road, the traffic light quickly gives a right of way to the secondary road. When this happens, the main     │            
+           │ light aborts its green phase and immediately switches to its 5 second yellow phase. If the vehicle is detected while the main light is yellow or red, │            
+           │ the system continues as if there were no vehicle.                                                                                                     │            
+           │                                                                                                                                                       │            
+           │ Model a system that controls the lights. Let this system have six pure outputs, one for each light, named mG, mY, and mR, to designate the main light │            
+           │ being green, yellow, or red, respectively, and sG, sY, and sR, to designate the secondary light being green, yellow, or red, respectively. These      │            
+           │ signals should be generated to turn on a light. You can implicitly assume that when one light is turned on, whichever has been on is turned off.      │            
+           │                                                                                                                                                       │            
+           │ Use the variable names mG, mY, mR, sG, sY, sR.                                                                                                        │            
+           │                                                                                                                                                       │            
+           │ Model: class Module(Module):                                                                                                                          │            
+           │   def locals(self):                                                                                                                                   │            
+           │     self.main_phase = int                                                                                                                             │            
+           │     self.secondary_phase = int                                                                                                                        │            
+           │     self.timer = int                                                                                                                                  │            
+           │                                                                                                                                                       │            
+           │   def inputs(self):                                                                                                                                   │            
+           │     self.secondary_vehicle_detected = bool                                                                                                            │            
+           │                                                                                                                                                       │            
+           │   def outputs(self):                                                                                                                                  │            
+           │     self.mG = bool                                                                                                                                    │            
+           │     self.mY = bool                                                                                                                                    │            
+           │     self.mR = bool                                                                                                                                    │            
+           │     self.sG = bool                                                                                                                                    │            
+           │     self.sY = bool                                                                                                                                    │            
+           │     self.sR = bool                                                                                                                                    │            
+           │                                                                                                                                                       │            
+           │   def init(self):                                                                                                                                     │            
+           │     self.main_phase = 0                                                                                                                               │            
+           │     self.secondary_phase = 0                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │   def next(self):                                                                                                                                     │            
+           │     if (self.secondary_vehicle_detected and (self.main_phase > 0)):                                                                                   │            
+           │       self.main_phase = 2                                                                                                                             │            
+           │       self.secondary_phase = 2                                                                                                                        │            
+           │     else:                                                                                                                                             │            
+           │       if (self.timer < (4 * 60)):                                                                                                                     │            
+           │         if (self.main_phase == 0):                                                                                                                    │            
+           │           self.timer = (self.timer + 1)                                                                                                               │            
+           │           if (self.timer >= (3 * 60)):                                                                                                                │            
+           │             self.main_phase = 1                                                                                                                       │            
+           │         else:                                                                                                                                         │            
+           │           if (self.main_phase == 1):                                                                                                                  │            
+           │             self.timer = (self.timer + 1)                                                                                                             │            
+           │             if (self.timer >= ((3 * 60) + 5)):                                                                                                        │            
+           │               self.main_phase = 2                                                                                                                     │            
+           │               self.timer = 0                                                                                                                          │            
+           │       else:                                                                                                                                           │            
+           │         if (self.secondary_phase == 0):                                                                                                               │            
+           │           self.timer = (self.timer + 1)                                                                                                               │            
+           │           if (self.timer >= ((3 * 60) + 5)):                                                                                                          │            
+           │             self.secondary_phase = 1                                                                                                                  │            
+           │             self.timer = 0                                                                                                                            │            
+           │         else:                                                                                                                                         │            
+           │           if (self.secondary_phase == 1):                                                                                                             │            
+           │             self.timer = (self.timer + 1)                                                                                                             │            
+           │             if (self.timer >= 50):                                                                                                                    │            
+           │               self.secondary_phase = 2                                                                                                                │            
+           │               self.timer = 0                                                                                                                          │            
+           │           else:                                                                                                                                       │            
+           │             if (self.secondary_phase == 2):                                                                                                           │            
+           │               self.timer = (self.timer + 1)                                                                                                           │            
+           │               if (self.timer >= 5):                                                                                                                   │            
+           │                 self.secondary_phase = 0                                                                                                              │            
+           │                 self.timer = 0                                                                                                                        │            
+           │     self.mG = (self.main_phase == 0)                                                                                                                  │            
+           │     self.mY = (self.main_phase == 1)                                                                                                                  │            
+           │     self.mR = (self.main_phase == 2)                                                                                                                  │            
+           │     self.sG = (self.secondary_phase == 0)                                                                                                             │            
+           │     self.sY = (self.secondary_phase == 1)                                                                                                             │            
+           │     self.sR = (self.secondary_phase == 2)                                                                                                             │            
+           │                                                                                                                                                       │            
+           │                                                                                                                                                       │            
+           │ Please assess the provided model with respect to the original task description. Please assign a grade on a scale of 1 through 5, with 1 being         │            
+           │ 'completely incorrect', 2 being 'incorrect with minor correct portions', 3 being 'incorrect with a few correct portions', 4 being 'correct but with a │            
+           │ few incorrect portions' and 5 being 'completely correct'.Work through all parts of the model, describing and explaining your assessment. Provide the  │            
+           │ score at the end.                                                                                                                                     │            
+           ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯            
+[12:14:08] ╭──────────────────────────────────────────────────────────────────── 🧠 Response:  ────────────────────────────────────────────────────────────────────╮ utils.py:42
+           │ The provided model implements a system to control traffic lights based on the detection of vehicles on the secondary road. Let's analyze the model    │            
+           │ according to the task description:                                                                                                                    │            
+           │                                                                                                                                                       │            
+           │ **1. Timer Mechanism and Phases Initialization:**                                                                                                     │            
+           │    - The model sets up phases for both main and secondary lights (`main_phase` and `secondary_phase`) and uses a `timer` to manage phase transitions. │            
+           │ This is a suitable approach to model state transitions over time.                                                                                     │            
+           │                                                                                                                                                       │            
+           │ **2. Traffic Light Phases Logic:**                                                                                                                    │            
+           │    - Each light phase (green, yellow, red) is represented correctly for both main and secondary lights using integer states (0, 1, 2).                │            
+           │    - Outputs `mG`, `mY`, `mR`, `sG`, `sY`, `sR` correspond to the states of main and secondary lights. These are correctly linked to their respective │            
+           │ phases.                                                                                                                                               │            
+           │                                                                                                                                                       │            
+           │ **3. Phases and Transition Timings:**                                                                                                                 │            
+           │    - The timing logic respects the given durations for each light phase on the non-vehicle-detected cycle (3 minutes for green, 5 seconds for yellow, │            
+           │ and 55 seconds for red on the main light; corresponding timings on the secondary light). However, the model somewhat inaccurately manages these       │            
+           │ timings by continuing to increment `timer` even after switching phases.                                                                               │            
+           │                                                                                                                                                       │            
+           │ **4. Vehicle Detection Handling:**                                                                                                                    │            
+           │    - Upon vehicle detection (`secondary_vehicle_detected = True`), the model exhibits some correct behavior by prematurely ending the green phase of  │            
+           │ the main light and transitioning to yellow. However, it does this regardless of the current phase of the main light.                                  │            
+           │    - The model does not fully respect the condition that if the vehicle is detected while the main light is already yellow or red, the system should  │            
+           │ not alter its behavior. This discrepancy can potentially disrupt the intended operation, leading to safety issues or inefficient traffic management.  │            
+           │                                                                                                                                                       │            
+           │ **5. Code Improvement Opportunities:**                                                                                                                │            
+           │    - The logic to reset `timer` and manage phases can be overly confusing or redundant. The continuous incrementation of `timer` without conditional  │            
+           │ check for resetting between phases might lead to errors or undesired behaviors.                                                                       │            
+           │    - Division of method `next()` into multiple sub-functions for clarity and modularity could enhance readability and maintainability.                │            
+           │                                                                                                                                                       │            
+           │ **6. Light Phase Mutual Exclusivity:**                                                                                                                │            
+           │    - The model successfully ensures that one light's green or yellow phase coincides with the other's red phase, adhering to the safety requirement   │            
+           │ described.                                                                                                                                            │            
+           │                                                                                                                                                       │            
+           │ The model earnestly attempts to comply with the system requirements, demonstrating a proper foundational architecture for state and timing management │            
+           │ relevant to the simulation of traffic lights. However, some crucial behaviors, particularly in response to vehicle detection while the main light is  │            
+           │ already in the yellow or red phase, are inaccurately portrayed or potentially erroneous.                                                              │            
+           │                                                                                                                                                       │            
+           │ ### Grade: 3                                                                                                                                          │            
+           │ While the model contains several correctly implemented portions, especially in how phases are managed, the logic errors and oversight in certain      │            
+           │ conditional scenarios (particularly regarding vehicle detection timing) limit its effectiveness. Thus, it is "incorrect with a few correct portions." │            
+           ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯            
+           ╭────── 🤖 Stats: ──────╮                                                                                                                                 utils.py:24
+           │ Original Lines: 80    │                                                                                                                                            
+           │ Final Lines:    62    │                                                                                                                                            
+           │ LLM Calls:      1     │                                                                                                                                            
+           │ LLM Time:       5.53s │                                                                                                                                            
+           │ Repair Time:    1.36s │                                                                                                                                            
+           ╰───────────────────────╯                                                                                                                                            

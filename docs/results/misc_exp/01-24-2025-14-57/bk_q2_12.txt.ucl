@@ -1,0 +1,32 @@
+module LeaderElection {
+  type Channel = bv3;
+
+  var Id: bv3;
+  var m: bv3;
+  var send: bv3;
+  var id: bv3;
+
+  input receive: Channel;
+
+  procedure step()
+    modifies send;
+  {
+    if ((receive == id) && !(receive < send)) {
+      send = Id;
+    }
+    if (receive > id) {
+      if (m == id) {
+        send = Id;
+      }
+      if (m > id) {
+        send = m;
+      }
+    } else {
+      send = m;
+    }
+  }
+
+  next {
+    call step();
+  }
+}

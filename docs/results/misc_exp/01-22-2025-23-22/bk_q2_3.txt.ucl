@@ -1,0 +1,61 @@
+module TrafficLightController {
+  var L1: enum { amber, green, red, yellow };
+  var L3: enum { amber, green, red, yellow };
+  var current_light: enum { L1L3, L2, L4 };
+  var current_state: enum { amber, green, red, yellow };
+
+  init {
+    current_state = red;
+    current_light = L1L3;
+
+  }
+  next {
+    if (current_state == green) {
+      current_state' = yellow;
+    } else {
+      if (current_state == yellow) {
+        current_state' = red;
+        if (current_light == L1L3) {
+          current_light' = L2;
+        } else {
+          if (current_light == L2) {
+            current_light' = L4;
+          } else {
+            if (current_light == L4) {
+              current_light' = L1L3;
+            }
+          }
+        }
+      } else {
+        if (current_state == red) {
+          current_state' = amber;
+        } else {
+          if (current_state == amber) {
+            current_state' = green;
+          }
+        }
+      }
+    }
+    if (current_light == L1L3) {
+      L1' = current_state;
+      L3' = current_state;
+      L2' = red;
+      L4' = red;
+    } else {
+      if (current_light == L2) {
+        L2' = current_state;
+        L1' = red;
+        L3' = red;
+        L4' = red;
+      } else {
+        if (current_light == L4) {
+          L4' = current_state;
+          L1' = red;
+          L2' = red;
+          L3' = red;
+        }
+      }
+    }
+
+  }
+}

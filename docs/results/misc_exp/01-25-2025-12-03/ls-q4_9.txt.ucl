@@ -1,0 +1,87 @@
+module Module {
+  var main_phase: integer;
+  var secondary_phase: integer;
+  var timer: integer;
+
+  input secondary_vehicle_detected: boolean;
+
+  output mG: boolean;
+  output mY: boolean;
+  output mR: boolean;
+  output sG: boolean;
+  output sY: boolean;
+  output sR: boolean;
+
+  init {
+    main_phase = 0;
+    secondary_phase = 0;
+
+  }
+  procedure step()
+    modifies mY;
+    modifies sY;
+    modifies sG;
+    modifies main_phase;
+    modifies mR;
+    modifies secondary_phase;
+    modifies sR;
+    modifies timer;
+    modifies mG;
+  {
+    if (secondary_vehicle_detected && (main_phase > 0)) {
+      main_phase = 2;
+      secondary_phase = 2;
+    } else {
+      if (timer < (4 * 60)) {
+        if (main_phase == 0) {
+          timer = (timer + 1);
+          if (timer >= (3 * 60)) {
+            main_phase = 1;
+          }
+        } else {
+          if (main_phase == 1) {
+            timer = (timer + 1);
+            if (timer >= ((3 * 60) + 5)) {
+              main_phase = 2;
+              timer = 0;
+            }
+          }
+        }
+      } else {
+        if (secondary_phase == 0) {
+          timer = (timer + 1);
+          if (timer >= ((3 * 60) + 5)) {
+            secondary_phase = 1;
+            timer = 0;
+          }
+        } else {
+          if (secondary_phase == 1) {
+            timer = (timer + 1);
+            if (timer >= 50) {
+              secondary_phase = 2;
+              timer = 0;
+            }
+          } else {
+            if (secondary_phase == 2) {
+              timer = (timer + 1);
+              if (timer >= 5) {
+                secondary_phase = 0;
+                timer = 0;
+              }
+            }
+          }
+        }
+      }
+    }
+    mG = (main_phase == 0);
+    mY = (main_phase == 1);
+    mR = (main_phase == 2);
+    sG = (secondary_phase == 0);
+    sY = (secondary_phase == 1);
+    sR = (secondary_phase == 2);
+  }
+
+  next {
+    call step();
+  }
+}

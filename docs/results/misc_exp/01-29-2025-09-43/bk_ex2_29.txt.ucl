@@ -1,0 +1,48 @@
+module BookingSystem {
+  var BCR_scanned: boolean;
+  var article_printed: boolean;
+  var data_received_from_BCR: boolean;
+  var data_sent_to_BP: boolean;
+  var print_code_sent_by_BP: boolean;
+  var print_command_sent_to_Printer: boolean;
+  var BCR_state: bv1;
+  var BP_state: bv1;
+  var Printer_state: bv1;
+
+  next {
+    if (BCR_state == 0bv1) {
+      if (BCR_scanned) {
+        BCR_state' = 1bv1;
+      }
+    } else {
+      if (BCR_state == 1bv1) {
+        if (data_sent_to_BP) {
+          BCR_state' = 0bv1;
+        }
+      }
+    }
+    if (BP_state == 0bv1) {
+      if (data_received_from_BCR) {
+        BP_state' = 1bv1;
+      }
+    } else {
+      if (BP_state == 1bv1) {
+        if (print_command_sent_to_Printer) {
+          BP_state' = 0bv1;
+        }
+      }
+    }
+    if (Printer_state == 0bv1) {
+      if (print_code_sent_by_BP) {
+        Printer_state' = 1bv1;
+      }
+    } else {
+      if (Printer_state == 1bv1) {
+        if (article_printed) {
+          Printer_state' = 0bv1;
+        }
+      }
+    }
+
+  }
+}

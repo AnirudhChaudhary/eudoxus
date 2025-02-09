@@ -1,0 +1,79 @@
+module Module {
+  var cabbage: boolean;
+  var carry: boolean;
+  var ferryman: boolean;
+  var goat: boolean;
+  var sideA: boolean;
+  var sideB: boolean;
+  var wolf: boolean;
+
+  init {
+    sideA = true;
+    sideB = false;
+    ferryman = false;
+    goat = false;
+    cabbage = false;
+    wolf = false;
+    carry = false;
+
+  }
+  procedure step()
+    modifies ferryman;
+    modifies sideA;
+    modifies wolf;
+    modifies carry;
+    modifies cabbage;
+    modifies sideB;
+    modifies goat;
+  {
+    if (!ferryman && sideB) {
+      sideA = true;
+      sideB = false;
+    } else {
+      if (ferryman && sideA) {
+        sideB = true;
+        sideA = false;
+      }
+    }
+    if ((goat && !carry) && ferryman) {
+      goat = false;
+      carry = true;
+    } else {
+      if ((goat && carry) && !ferryman) {
+        goat = true;
+        carry = false;
+      }
+    }
+    if ((cabbage && !carry) && ferryman) {
+      cabbage = false;
+      carry = true;
+    } else {
+      if ((cabbage && carry) && !ferryman) {
+        cabbage = true;
+        carry = false;
+      }
+    }
+    if ((wolf && !carry) && ferryman) {
+      wolf = false;
+      carry = true;
+    } else {
+      if ((wolf && carry) && !ferryman) {
+        wolf = true;
+        carry = false;
+      }
+    }
+    ferryman = !ferryman;
+  }
+
+  next {
+    call step();
+  }
+  invariant spec: ((goat != cabbage) && (goat != wolf));
+
+  control {
+    induction(1);
+    check;
+    print_results;
+
+  }
+}

@@ -1,0 +1,43 @@
+module Thermostat {
+  var temp: integer;
+  var heatOn: boolean;
+  var heatOff: boolean;
+  var time: integer;
+
+  init {
+    heatOn = false;
+    heatOff = false;
+    time = 0;
+
+  }
+  procedure step()
+    modifies heatOn;
+    modifies time;
+    modifies heatOff;
+  {
+    if (((temp <= 20) && !heatOn) && !heatOff) {
+      heatOn = true;
+      heatOff = false;
+      time = 0;
+    } else {
+      if (((temp > 20) && heatOn) && !heatOff) {
+        heatOn = false;
+        heatOff = true;
+        time = 0;
+      } else {
+        if (((time == 30) && heatOn) && !heatOff) {
+          time = 0;
+        } else {
+          if (((time == 120) && !heatOn) && heatOff) {
+            time = 0;
+          }
+        }
+      }
+    }
+    time = (time + 1);
+  }
+
+  next {
+    call step();
+  }
+}

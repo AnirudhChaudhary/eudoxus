@@ -1,0 +1,50 @@
+module Junction {
+  var aux1: boolean;
+  var aux2: boolean;
+  var aux3: boolean;
+  var aux4: boolean;
+  var L1: bv8;
+  var L2: bv6;
+  var L3: bv7;
+  var L4: bv5;
+  var controller: integer;
+
+  init {
+    L1 = 0bv8;
+    L2 = 1bv6;
+    L3 = 0bv7;
+    L4 = 1bv5;
+    controller = 0;
+
+  }
+  next {
+    aux1' = ((controller == 0) || (controller == 2));
+    aux2' = (controller == 1);
+    aux3' = (controller == 3);
+    aux4' = (controller == 4);
+    if (aux1) {
+      L1' = ((L1 + 1bv8) % 4bv8);
+      L3' = ((L3 + 1bv7) % 4bv7);
+    }
+    if (aux2) {
+      L2' = ((L2 + 1bv6) % 4bv6);
+    }
+    if (aux3) {
+      L4' = ((L4 + 1bv5) % 4bv5);
+    }
+    if (controller == 4) {
+      controller' = 0;
+    } else {
+      controller' = (controller + 1);
+    }
+
+  }
+  invariant spec: ((((L1 == 0bv8) && (L3 == 0bv7)) && (L2 != 0bv6)) && (L4 != 0bv5));
+
+  control {
+    induction(1);
+    check;
+    print_results;
+
+  }
+}

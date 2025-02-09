@@ -1,0 +1,74 @@
+module TrafficLight {
+  var count: integer;
+  var pedestrian: boolean;
+  var sigG: boolean;
+  var sigR: boolean;
+  var sigY: boolean;
+  var state: integer;
+
+  init {
+    state = 0;
+    count = 0;
+    pedestrian = false;
+    sigG = false;
+    sigY = false;
+    sigR = true;
+
+  }
+  procedure step()
+    modifies count;
+    modifies sigR;
+    modifies state;
+    modifies sigY;
+    modifies sigG;
+  {
+    sigG = false;
+    sigY = false;
+    sigR = false;
+    if (state == 0) {
+      count = 0;
+      if (count == 60) {
+        state = 1;
+      } else {
+        count = (count + 1);
+        sigR = true;
+      }
+    } else {
+      if (state == 1) {
+        if (pedestrian) {
+          if (count >= 60) {
+            state = 2;
+            count = 0;
+          } else {
+            state = 5;
+          }
+        } else {
+          count = (count + 1);
+          sigG = true;
+        }
+      } else {
+        if (state == 2) {
+          if (count == 5) {
+            state = 0;
+          } else {
+            count = (count + 1);
+            sigY = true;
+          }
+        } else {
+          if (state == 5) {
+            if (count == 60) {
+              state = 2;
+              count = 0;
+            } else {
+              count = (count + 1);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+}

@@ -1,0 +1,38 @@
+module Module {
+  var heatOff: boolean;
+  var heatOn: boolean;
+  var temp: integer;
+  var time: integer;
+
+  init {
+    heatOn = (temp <= 20);
+
+  }
+  procedure step()
+    modifies time;
+    modifies heatOff;
+    modifies heatOn;
+  {
+    if (heatOn) {
+      if (time >= 30) {
+        heatOn = false;
+        heatOff = true;
+        time = 0;
+      }
+      time = (time + 1);
+    } else {
+      if (heatOff) {
+        if (time >= 120) {
+          heatOn = (temp <= 20);
+          heatOff = false;
+          time = 0;
+        }
+        time = (time + 1);
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+}

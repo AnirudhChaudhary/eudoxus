@@ -1,0 +1,68 @@
+module Sender {
+  type Bit = real;
+
+  var b: real;
+  var c: boolean;
+  var d: boolean;
+  var m: boolean;
+  var Sent: boolean;
+  var Stored: boolean;
+  var Waiting: boolean;
+
+  input b_ack: Bit;
+
+  procedure step()
+    modifies Waiting;
+    modifies Sent;
+    modifies d;
+    modifies c;
+    modifies b;
+    modifies Stored;
+  {
+    if (d && m) {
+      Sent = true;
+      Waiting = true;
+      Stored = true;
+    }
+    if (Sent && Stored) {
+      Sent = false;
+      Stored = false;
+    }
+    if (d) {
+      c = m;
+    } else {
+      if (b_ack != b) {
+        c = m;
+        Waiting = true;
+      } else {
+        if (c) {
+          d = true;
+          b = (b + 1.0);
+        }
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+}
+module Receiver {
+  type Bit = real;
+
+  var S: record { b: real };
+  var b_ack: real;
+  var Received: boolean;
+  var Acknowledged: boolean;
+
+  input m: Bit;
+
+  next {
+    b_ack' = S.b;
+    if (b_ack == 0.0) {
+      Received' = true;
+      Acknowledged' = true;
+    }
+
+  }
+}

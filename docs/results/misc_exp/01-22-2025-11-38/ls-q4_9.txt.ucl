@@ -1,0 +1,73 @@
+module TrafficLights {
+  type float = integer;
+
+  var cycle_timer: integer;
+  var mG: boolean;
+  var mR: boolean;
+  var mY: boolean;
+  var main_green_timer: integer;
+  var main_yellow_timer: integer;
+  var sG: boolean;
+  var sR: boolean;
+  var sY: boolean;
+  var secondary_vehicle_detected: boolean;
+  var secondary_yellow_timer: integer;
+  var vehicle_detected: boolean;
+  var inf: float;
+
+  init {
+    main_yellow_timer = 5;
+    secondary_yellow_timer = 5;
+    cycle_timer = 240;
+    vehicle_detected = false;
+    secondary_vehicle_detected = false;
+    main_green_timer = inf;
+
+  }
+  next {
+    if (vehicle_detected) {
+      main_green_timer' = 5;
+      main_yellow_timer' = 5;
+      cycle_timer' = inf;
+      secondary_yellow_timer' = (secondary_yellow_timer + 5);
+      secondary_vehicle_detected' = vehicle_detected;
+      vehicle_detected' = false;
+    } else {
+      main_green_timer' = 180;
+      main_yellow_timer' = 5;
+      secondary_yellow_timer' = 5;
+      cycle_timer' = 240;
+    }
+    if (main_green_timer > 0) {
+      mG' = true;
+      mY' = false;
+      mR' = false;
+    } else {
+      if (main_yellow_timer > 0) {
+        mG' = false;
+        mY' = true;
+        mR' = false;
+      } else {
+        mG' = false;
+        mY' = false;
+        mR' = true;
+      }
+    }
+    if (cycle_timer > 0) {
+      sG' = true;
+      sY' = false;
+      sR' = false;
+    } else {
+      if (secondary_yellow_timer > 0) {
+        sG' = false;
+        sY' = true;
+        sR' = false;
+      } else {
+        sG' = false;
+        sY' = false;
+        sR' = true;
+      }
+    }
+
+  }
+}

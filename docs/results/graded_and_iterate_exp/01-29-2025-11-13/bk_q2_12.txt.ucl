@@ -1,0 +1,41 @@
+module LeaderElection {
+  type id = bv8;
+
+  var state: enum { idle, leader, stop };
+  var m: id;
+  var act: boolean;
+
+  input in_m: bv8;
+
+  output out_m: id;
+
+  procedure step()
+    modifies state;
+    modifies act;
+    modifies m;
+  {
+    act = true;
+    if (state == idle) {
+      m = in_m;
+      state = leader;
+    } else {
+      if (state == leader) {
+        if (in_m > m) {
+          m = in_m;
+        } else {
+          state = stop;
+        }
+      } else {
+        if (state == stop) {
+          act = false;
+        } else {
+          state = idle;
+        }
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+}

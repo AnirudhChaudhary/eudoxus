@@ -1,0 +1,52 @@
+module TrafficLight {
+  var count: integer;
+  var green_duration: integer;
+  var pedestrian: boolean;
+  var state: enum { GREEN, PENDING, RED, YELLOW };
+
+  init {
+    state = RED;
+    count = 0;
+    green_duration = 0;
+
+  }
+  procedure step()
+    modifies count;
+    modifies state;
+    modifies green_duration;
+  {
+    if (state == RED) {
+      count = (count + 1);
+      if (count == 60) {
+        state = GREEN;
+        count = 0;
+      }
+    } else {
+      if (state == GREEN) {
+        if (pedestrian && (green_duration >= 60)) {
+          state = YELLOW;
+          count = 0;
+        } else {
+          count = (count + 1);
+          if (count == 60) {
+            state = YELLOW;
+            count = 0;
+          }
+        }
+      } else {
+        if (state == YELLOW) {
+          count = (count + 1);
+          if (count == 5) {
+            state = RED;
+            count = 0;
+            green_duration = 0;
+          }
+        }
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+}

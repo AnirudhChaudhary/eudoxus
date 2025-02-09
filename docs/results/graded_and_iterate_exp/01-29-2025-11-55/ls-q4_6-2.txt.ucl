@@ -1,0 +1,45 @@
+module Module {
+  var buckled: boolean;
+  var ignition: boolean;
+  var nowarn: boolean;
+  var redLightOn: boolean;
+  var time: integer;
+  var warn: boolean;
+  var beeper: boolean;
+
+  init {
+    warn = false;
+    nowarn = false;
+    time = 0;
+    ignition = false;
+    buckled = false;
+    redLightOn = false;
+    beeper = false;
+
+  }
+  procedure step()
+    modifies redLightOn;
+    modifies warn;
+    modifies beeper;
+    modifies time;
+  {
+    if ((ignition && !buckled) && !warn) {
+      time = (time + 1);
+      if (time >= 30) {
+        warn = true;
+        beeper = true;
+        redLightOn = true;
+      }
+    }
+    if ((ignition && buckled) && warn) {
+      time = 0;
+      warn = false;
+      beeper = false;
+      redLightOn = false;
+    }
+  }
+
+  next {
+    call step();
+  }
+}

@@ -1,0 +1,66 @@
+module Module {
+  next {
+    ??;
+
+  }
+}
+module RiverCrossingModule {
+  type Side = enum { Left, Right };
+  type Entity = enum { Cabbage, Goat, None_, Wolf };
+
+  var new_ferryman_side: enum { Left, Right };
+  var ferryman: Side;
+  var goat: Side;
+  var cabbage: Side;
+  var wolf: Side;
+  var carry: Entity;
+
+  init {
+    ferryman = Left;
+    goat = Left;
+    cabbage = Left;
+    wolf = Left;
+    carry = None_;
+
+  }
+  procedure step()
+    modifies goat;
+    modifies cabbage;
+    modifies carry;
+    modifies new_ferryman_side;
+    modifies ferryman;
+    modifies wolf;
+  {
+    new_ferryman_side = (if (ferryman == Left) then Right else Left);
+    if (carry == Goat) {
+      goat = new_ferryman_side;
+    } else {
+      if (carry == Cabbage) {
+        cabbage = new_ferryman_side;
+      } else {
+        if (carry == Wolf) {
+          wolf = new_ferryman_side;
+        }
+      }
+    }
+    ferryman = new_ferryman_side;
+    carry = None_;
+    if ((goat == ferryman) && (carry == None_)) {
+      carry = Goat;
+    } else {
+      if ((cabbage == ferryman) && (carry == None_)) {
+        carry = Cabbage;
+      } else {
+        if ((wolf == ferryman) && (carry == None_)) {
+          carry = Wolf;
+        }
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+  invariant spec: (((((ferryman == Right) && (goat == Right)) && (cabbage == Right)) && (wolf == Right)) && !(((goat == cabbage) && (cabbage != ferryman)) || ((goat == wolf) && (wolf != ferryman))));
+
+}

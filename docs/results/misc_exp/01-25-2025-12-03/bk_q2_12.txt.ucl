@@ -1,0 +1,31 @@
+module LeaderElection {
+  type Input = integer;
+  type Output = integer;
+
+  var current_id: integer;
+  var m: integer;
+  var receive_msg: integer;
+
+  input id: Input;
+
+  output leader_id: Output;
+
+  init {
+    m = id;
+
+  }
+  next {
+    current_id' = m;
+    receive_msg' = receive_msg;
+    if (receive_msg == current_id) {
+      leader_id' = current_id;
+    } else {
+      if (receive_msg > current_id) {
+        m' = receive_msg;
+      }
+    }
+
+  }
+  invariant spec: (leader_id == id);
+
+}

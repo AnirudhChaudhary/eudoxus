@@ -1,0 +1,61 @@
+module Module {
+  var arrival: boolean;
+  var departure: boolean;
+  var counter: integer;
+  var display: integer;
+
+  instance arrival_detector: ArrivalDetector(arrival:(arrival));
+  instance departure_detector: DepartureDetector(departure:(departure));
+  instance counter_actor: Counter();
+  instance display_actor: DisplayUpdater();
+
+  next {
+    if (arrival) {
+      counter' = (counter + 1);
+    } else {
+      if (departure) {
+        counter' = (counter - 1);
+      }
+    }
+    display' = counter;
+
+  }
+}
+module ArrivalDetector {
+  input arrival: boolean;
+
+}
+module DepartureDetector {
+  input departure: boolean;
+
+}
+module Counter {
+  var arrival: boolean;
+  var departure: boolean;
+  var counter: integer;
+
+  instance arrival_detector: ArrivalDetector(arrival:(arrival));
+  instance departure_detector: DepartureDetector(departure:(departure));
+
+  next {
+    if (arrival) {
+      counter' = (counter + 1);
+    } else {
+      if (departure) {
+        counter' = (counter - 1);
+      }
+    }
+
+  }
+}
+module DisplayUpdater {
+  var counter: integer;
+  var display: integer;
+
+  instance counter_actor: Counter();
+
+  next {
+    display' = counter;
+
+  }
+}

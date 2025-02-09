@@ -1,0 +1,48 @@
+module TrafficLight {
+  var pedestrian: boolean;
+  var count: integer;
+
+  output sigG: boolean;
+  output sigY: boolean;
+  output sigR: boolean;
+
+  init {
+    sigR = true;
+    sigG = false;
+    sigY = false;
+
+  }
+  next {
+    if (count < 60) {
+      if (sigR) {
+        sigR' = false;
+        sigG' = true;
+        sigY' = false;
+      }
+      count' = (count + 1);
+    } else {
+      if ((sigG && pedestrian) || (sigG && (count >= 120))) {
+        sigR' = true;
+        sigG' = false;
+        sigY' = false;
+      } else {
+        if (sigY && (count < 5)) {
+          sigR' = true;
+          sigG' = false;
+          sigY' = false;
+          count' = (count + 1);
+        } else {
+          if (sigY && (count >= 5)) {
+            sigR' = false;
+            sigG' = false;
+            sigY' = true;
+            count' = 0;
+          }
+        }
+      }
+    }
+
+  }
+  invariant spec: (count <= 125);
+
+}

@@ -1,0 +1,64 @@
+module TrafficLightController {
+  var mG: boolean;
+  var mR: boolean;
+  var mY: boolean;
+  var sG: boolean;
+  var sR: boolean;
+  var sY: boolean;
+  var timer: integer;
+  var vehicle_detected: boolean;
+
+  input vehicle_detected_input: boolean;
+
+  init {
+    timer = 0;
+    vehicle_detected = false;
+
+  }
+  next {
+    if (vehicle_detected_input) {
+      timer' = 5;
+      vehicle_detected' = true;
+    } else {
+      if (!vehicle_detected) {
+        if (timer < (60 * 4)) {
+          timer' = (timer + 1);
+          if (timer < 180) {
+            mG' = true;
+          } else {
+            if (timer < 185) {
+              mG' = false;
+              mY' = true;
+            } else {
+              mY' = false;
+              mR' = true;
+            }
+          }
+        } else {
+          timer' = 0;
+          vehicle_detected' = false;
+        }
+      } else {
+        timer' = 5;
+        vehicle_detected' = false;
+      }
+    }
+    if (timer < 180) {
+      sR' = true;
+    } else {
+      if (timer < 290) {
+        sR' = false;
+        sG' = true;
+      } else {
+        if (timer < 295) {
+          sG' = false;
+          sY' = true;
+        } else {
+          sY' = false;
+          sR' = true;
+        }
+      }
+    }
+
+  }
+}

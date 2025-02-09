@@ -1,0 +1,90 @@
+module Module {
+  var main_green: boolean;
+  var main_yellow: boolean;
+  var main_red: boolean;
+  var sec_green: boolean;
+  var sec_yellow: boolean;
+  var sec_red: boolean;
+  var main_count: integer;
+  var sec_count: integer;
+  var main_vehicle_detected: boolean;
+
+  init {
+    main_count = 0;
+    sec_count = 0;
+    main_vehicle_detected = false;
+    main_green = true;
+    main_yellow = false;
+    main_red = false;
+    sec_green = false;
+    sec_yellow = false;
+    sec_red = true;
+
+  }
+  procedure step()
+    modifies sec_count;
+    modifies main_red;
+    modifies main_count;
+    modifies main_yellow;
+    modifies main_green;
+    modifies sec_green;
+    modifies sec_yellow;
+    modifies sec_red;
+  {
+    if (main_vehicle_detected) {
+      main_green = false;
+      main_yellow = true;
+      main_red = false;
+    } else {
+      if (main_count < 180) {
+        main_green = true;
+        main_yellow = false;
+        sec_red = true;
+        sec_green = false;
+        sec_yellow = false;
+        sec_count = (sec_count + 1);
+        if (sec_count == 180) {
+          main_count = (main_count + 1);
+          sec_count = 0;
+        }
+      } else {
+        if (main_count == 180) {
+          main_green = false;
+          main_yellow = true;
+          main_red = false;
+        } else {
+          if ((main_count > 180) && (main_count < 235)) {
+            main_green = false;
+            main_yellow = true;
+            main_red = false;
+            sec_count = (sec_count + 1);
+            if (sec_count < 50) {
+              sec_green = true;
+            } else {
+              if (sec_count == 50) {
+                sec_green = false;
+                sec_yellow = true;
+                sec_red = false;
+              } else {
+                if (sec_count == 55) {
+                  sec_yellow = false;
+                  sec_red = true;
+                  main_count = (main_count + 1);
+                  sec_count = 0;
+                }
+              }
+            }
+          } else {
+            main_green = true;
+            main_yellow = false;
+            main_red = false;
+          }
+        }
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+}

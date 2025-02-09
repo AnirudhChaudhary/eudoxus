@@ -1,0 +1,54 @@
+module TrafficLightSM {
+  var State: record { ??: bv2, ??: bv2, ??: bv2, ??: bv2 };
+  var count: integer;
+  var pedestrian: boolean;
+  var sigG: boolean;
+  var sigR: boolean;
+  var sigY: boolean;
+  var state: record {  };
+
+  next {
+    if (state == state.RED) {
+      if (count >= 60) {
+        state' = state.GREEN;
+        count' = 0;
+      } else {
+        count' = (count + 1);
+      }
+    } else {
+      if (state == state.GREEN) {
+        if (pedestrian && (count >= 60)) {
+          state' = state.YELLOW;
+          count' = 0;
+        } else {
+          if (count < 60) {
+            state' = (if (pedestrian) then state.PENDING else state.GREEN);
+            count' = (count + 1);
+          }
+        }
+      } else {
+        if (state == state.PENDING) {
+          if (count >= 60) {
+            state' = state.YELLOW;
+            count' = 0;
+          } else {
+            count' = (count + 1);
+          }
+        } else {
+          if (state == state.YELLOW) {
+            if (count >= 5) {
+              state' = state.RED;
+              count' = 0;
+            } else {
+              count' = (count + 1);
+            }
+          }
+        }
+      }
+    }
+    sigG' = (state == state.GREEN);
+    sigY' = (state == state.YELLOW);
+    sigR' = (state == state.RED);
+
+  }
+}

@@ -1,0 +1,47 @@
+module TrafficLights {
+  var vehicle_detected: boolean;
+  var y: integer;
+  var mG: boolean;
+  var mY: boolean;
+  var mR: boolean;
+  var sG: boolean;
+  var sY: boolean;
+  var sR: boolean;
+
+  init {
+    mG = false;
+    mY = false;
+    mR = true;
+    sG = false;
+    sY = false;
+    sR = true;
+
+  }
+  next {
+    if (!vehicle_detected) {
+      if (mR) {
+        mG' = (y > 180);
+        mY' = (mG && (y < (180 + 5)));
+        mR' = !(mG || mY);
+      }
+      if (sR) {
+        sG' = ((y > 180) && !mG);
+        sY' = (sG && (y >= 240));
+        sR' = !(sG || sY);
+      }
+    } else {
+      if (!mR && !mY) {
+        mY' = true;
+        mR' = false;
+      } else {
+        if (mY) {
+          mY' = false;
+          mR' = true;
+        }
+      }
+    }
+
+  }
+  invariant spec: ((mG || mY) && sR);
+
+}

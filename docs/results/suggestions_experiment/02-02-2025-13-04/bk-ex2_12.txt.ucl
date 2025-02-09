@@ -1,0 +1,47 @@
+module BeverageVendingMachine {
+  var nsoda: bv8;
+  var nbeer: bv8;
+  var sget: boolean;
+  var bget: boolean;
+  var refill: boolean;
+  var coin: boolean;
+
+  init {
+    nsoda = 0bv8;
+    nbeer = 0bv8;
+    sget = false;
+    bget = false;
+    refill = false;
+    coin = false;
+
+  }
+  procedure step()
+    modifies coin;
+    modifies sget;
+    modifies refill;
+    modifies bget;
+  {
+    coin = true;
+    refill = true;
+    if (nsoda > 0bv8) {
+      sget = true;
+    } else {
+      sget = false;
+    }
+    if (nbeer > 0bv8) {
+      bget = true;
+    } else {
+      bget = false;
+    }
+    if ((nsoda == 0bv8) && (nbeer == 0bv8)) {
+      coin = false;
+      refill = false;
+    }
+  }
+
+  next {
+    call step();
+  }
+  invariant spec: ((nsoda <= 8bv8) && (nbeer <= 8bv8));
+
+}

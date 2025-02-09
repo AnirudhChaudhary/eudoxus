@@ -1,0 +1,470 @@
+[11:05:01] ╭───────────────────────────────────────────────────────────────────── 🤖 Prompt: ──────────────────────────────────────────────────────────────────────╮ utils.py:24
+           │ Write Python code that extends the `Module` class below to complete the following task.                                                               │            
+           │                                                                                                                                                       │            
+           │ > Consider the intersection of two one-way streets, called Main and Secondary. A light on each street controls its traffic. Each light goes through a │            
+           │ cycle consisting of a red (R), green (G), and yellow (Y) phases. It is a safety requirement that when one light is in its green or yellow phase, the  │            
+           │ other is in its red phase. The yellow phase is always 5 seconds long. The traffic lights operate as follows. A sensor in the secondary road detects a │            
+           │ vehicle. While no vehicle is detected, there is a 4 minute-long cycle with the main light having 3 minutes of green, 5 seconds of yellow, and 55      │            
+           │ seconds of red. The secondary light is red for 3 minutes and 5 seconds (while the main light is green and yellow), green for 50 seconds, then yellow  │            
+           │ for 5 seconds. If a vehicle is detected on the secondary road, the traffic light quickly gives a right of way to the secondary road. When this        │            
+           │ happens, the main light aborts its green phase and immediately switches to its 5 second yellow phase. If the vehicle is detected while the main light │            
+           │ is yellow or red, the system continues as if there were no vehicle. Model a system that controls the lights. Let this system have six pure outputs,   │            
+           │ one for each light, named mG, mY, and mR, to designate the main light being green, yellow, or red, respectively, and sG, sY, and sR, to designate the │            
+           │ secondary light being green, yellow, or red, respectively. These signals should be generated to turn on a light. You can implicitly assume that when  │            
+           │ one light is turned on, whichever has been on is turned off. Use the variable names mG, mY, mR, sG, sY, sR.                                           │            
+           │                                                                                                                                                       │            
+           │ Reply with your Python code inside one unique code block.                                                                                             │            
+           │                                                                                                                                                       │            
+           │ ```python                                                                                                                                             │            
+           │ class Module:                                                                                                                                         │            
+           │     """An abstract class to represent a UCLID5 module."""                                                                                             │            
+           │                                                                                                                                                       │            
+           │     def types(self):                                                                                                                                  │            
+           │         """(Optional) Defines the type declarations.                                                                                                  │            
+           │         For example, the following implementation defines a 8-bit type called T:                                                                      │            
+           │         ```                                                                                                                                           │            
+           │         def types(self):                                                                                                                              │            
+           │             self.T = BitVector(8)                                                                                                                     │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def locals(self):                                                                                                                                 │            
+           │         """(Optional) Defines the local variables and their types.                                                                                    │            
+           │         For example, the following implementation defines an 8-bit variable x                                                                         │            
+           │         and an integer variable y:                                                                                                                    │            
+           │         ```                                                                                                                                           │            
+           │         def locals(self):                                                                                                                             │            
+           │             self.x = BitVector(8)                                                                                                                     │            
+           │             self.y = Integer()                                                                                                                        │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def inputs(self):                                                                                                                                 │            
+           │         """(Optional) Defines the input variables and their types.                                                                                    │            
+           │         For example, the following implementation defines an input variable x,                                                                        │            
+           │         which is an array of 8-bit bitvectors indexed by 2-bit bitvectors:                                                                            │            
+           │         ```                                                                                                                                           │            
+           │         def inputs(self):                                                                                                                             │            
+           │             self.x = Array(BitVector(2), BitVector(8))                                                                                                │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def outputs(self):                                                                                                                                │            
+           │         """(Optional) Defines the output variables and their types.                                                                                   │            
+           │         For example, the following implementation defines an output variable y,                                                                       │            
+           │         which is a real number:                                                                                                                       │            
+           │         ```                                                                                                                                           │            
+           │         def outputs(self):                                                                                                                            │            
+           │             self.y = Real()                                                                                                                           │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def shared_vars(self):                                                                                                                            │            
+           │         """(Optional) Defines the shared variables and their types.                                                                                   │            
+           │         For example, the following implementation defines a shared variable z,                                                                        │            
+           │         which is an array of booleans indexed by integers:                                                                                            │            
+           │         ```                                                                                                                                           │            
+           │         def shared_vars(self):                                                                                                                        │            
+           │             self.z = Array(Integer(), Boolean())                                                                                                      │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def instances(self):                                                                                                                              │            
+           │         """(Optional) Defines the instances of other modules and relates their                                                                        │            
+           │         input, output, and shared variables to local variables. Every instance                                                                        │            
+           │         variable must be related to a local variable. For example, let M be                                                                           │            
+           │         another module with inputs x and y, and output z. The following                                                                               │            
+           │         implementation defines an instance of M called m, and connects M's                                                                            │            
+           │         input variable x to the local variable self.a, M's input variable y to                                                                        │            
+           │         the local variable self.b, and M's output variable z to the local                                                                             │            
+           │         variable self.c:                                                                                                                              │            
+           │         ```                                                                                                                                           │            
+           │         def instances(self):                                                                                                                          │            
+           │             self.m = M(x=self.a, y=self.b, z=self.c)                                                                                                  │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def init(self):                                                                                                                                   │            
+           │         """(Optional) Defines how variables are initialized.                                                                                          │            
+           │         For example, the following implementation initializes x to 0 if y is                                                                          │            
+           │         greater than or equal to 20:                                                                                                                  │            
+           │         ```                                                                                                                                           │            
+           │         def init(self):                                                                                                                               │            
+           │             if self.y >= 20:                                                                                                                          │            
+           │                 self.x = 0                                                                                                                            │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def next(self):                                                                                                                                   │            
+           │         """(Optional) Defines the transition relation.                                                                                                │            
+           │         For example, the following implementation increments x or decrements y                                                                        │            
+           │         depending on z:                                                                                                                               │            
+           │         ```                                                                                                                                           │            
+           │         def next(self):                                                                                                                               │            
+           │             if self.z:                                                                                                                                │            
+           │                 self.x = self.x + 1                                                                                                                   │            
+           │             else:                                                                                                                                     │            
+           │                 self.y = self.y - 1                                                                                                                   │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def specification(self):                                                                                                                          │            
+           │         """(Optional) Defines the specification in terms of invariant properties.                                                                     │            
+           │                                                                                                                                                       │            
+           │         Returns:                                                                                                                                      │            
+           │             bool: True if the specification is satisfied, False otherwise.                                                                            │            
+           │                                                                                                                                                       │            
+           │         For example, the following implementation defines two invariants:                                                                             │            
+           │         ```                                                                                                                                           │            
+           │         def specification(self):                                                                                                                      │            
+           │             return self.x < 10 and self.y > 0                                                                                                         │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def proof(self):                                                                                                                                  │            
+           │         """(Optional) Defines the control block.                                                                                                      │            
+           │         For example, the following implementation uses 1-induction to prove                                                                           │            
+           │         that the specification always holds:                                                                                                          │            
+           │         ```                                                                                                                                           │            
+           │         def proof(self):                                                                                                                              │            
+           │             induction(1)                                                                                                                              │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │ ```                                                                                                                                                   │            
+           │                                                                                                                                                       │            
+           │ I can definitely do that! Here is the Python code:                                                                                                    │            
+           │ ```python                                                                                                                                             │            
+           │                                                                                                                                                       │            
+           ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯            
+[11:05:06] ╭───────────────────────────────── 🧠 Response: ──────────────────────────────────╮                                                                       utils.py:42
+           │ class TrafficLightController(Module):                                           │                                                                                  
+           │     def types(self):                                                            │                                                                                  
+           │         # Define the type for the outputs                                       │                                                                                  
+           │         self.mG = Boolean()                                                     │                                                                                  
+           │         self.mY = Boolean()                                                     │                                                                                  
+           │         self.mR = Boolean()                                                     │                                                                                  
+           │         self.sG = Boolean()                                                     │                                                                                  
+           │         self.sY = Boolean()                                                     │                                                                                  
+           │         self.sR = Boolean()                                                     │                                                                                  
+           │                                                                                 │                                                                                  
+           │     def locals(self):                                                           │                                                                                  
+           │         # Define local variables to keep track of states                        │                                                                                  
+           │         self.timer = Integer()                                                  │                                                                                  
+           │         self.vehicle_detected = Boolean()                                       │                                                                                  
+           │                                                                                 │                                                                                  
+           │     def inputs(self):                                                           │                                                                                  
+           │         # Define input variable for detecting vehicle on secondary road         │                                                                                  
+           │         self.vehicle_detected_input = Boolean()                                 │                                                                                  
+           │                                                                                 │                                                                                  
+           │     def init(self):                                                             │                                                                                  
+           │         # Initialize the timer and vehicle detection                            │                                                                                  
+           │         self.timer = 0                                                          │                                                                                  
+           │         self.vehicle_detected = False                                           │                                                                                  
+           │                                                                                 │                                                                                  
+           │     def next(self):                                                             │                                                                                  
+           │         # Implement the logic for traffic light control                         │                                                                                  
+           │         if self.vehicle_detected_input:                                         │                                                                                  
+           │             # Vehicle detected on secondary road                                │                                                                                  
+           │             self.timer = 5  # Immediately switch to yellow phase for main light │                                                                                  
+           │             self.vehicle_detected = True                                        │                                                                                  
+           │         elif not self.vehicle_detected:                                         │                                                                                  
+           │             # No vehicle detected                                               │                                                                                  
+           │             if self.timer < 60 * 4:                                             │                                                                                  
+           │                 # 4-minute cycle when no vehicle detected                       │                                                                                  
+           │                 self.timer += 1                                                 │                                                                                  
+           │                 if self.timer < 180:  # 3 minutes                               │                                                                                  
+           │                     self.mG = True  # Main light is green                       │                                                                                  
+           │                 elif self.timer < 185:  # 5 seconds                             │                                                                                  
+           │                     self.mG = False                                             │                                                                                  
+           │                     self.mY = True  # Main light is yellow                      │                                                                                  
+           │                 else:                                                           │                                                                                  
+           │                     self.mY = False                                             │                                                                                  
+           │                     self.mR = True  # Main light is red                         │                                                                                  
+           │             else:                                                               │                                                                                  
+           │                 self.timer = 0                                                  │                                                                                  
+           │                 self.vehicle_detected = False                                   │                                                                                  
+           │         else:                                                                   │                                                                                  
+           │             # Vehicle detected but main light is not in green phase             │                                                                                  
+           │             self.timer = 5                                                      │                                                                                  
+           │             self.vehicle_detected = False                                       │                                                                                  
+           │                                                                                 │                                                                                  
+           │         # Update secondary light based on main light state                      │                                                                                  
+           │         if self.timer < 180:  # 3 minutes                                       │                                                                                  
+           │             self.sR = True  # Secondary light is red                            │                                                                                  
+           │         elif self.timer < 290:  # 3 minutes 5 seconds                           │                                                                                  
+           │             self.sR = False                                                     │                                                                                  
+           │             self.sG = True  # Secondary light is green                          │                                                                                  
+           │         elif self.timer < 295:  # 50 seconds                                    │                                                                                  
+           │             self.sG = False                                                     │                                                                                  
+           │             self.sY = True  # Secondary light is yellow                         │                                                                                  
+           │         else:                                                                   │                                                                                  
+           │             self.sY = False                                                     │                                                                                  
+           │             self.sR = True  # Secondary light is red                            │                                                                                  
+           │ ```                                                                             │                                                                                  
+           ╰─────────────────────────────────────────────────────────────────────────────────╯                                                                                  
+           ╭───────────────────────────────── 🤖 Extracted: ─────────────────────────────────╮                                                                       utils.py:24
+           │                                                                                 │                                                                                  
+           │ class TrafficLightController(Module):                                           │                                                                                  
+           │     def types(self):                                                            │                                                                                  
+           │         # Define the type for the outputs                                       │                                                                                  
+           │         self.mG = Boolean()                                                     │                                                                                  
+           │         self.mY = Boolean()                                                     │                                                                                  
+           │         self.mR = Boolean()                                                     │                                                                                  
+           │         self.sG = Boolean()                                                     │                                                                                  
+           │         self.sY = Boolean()                                                     │                                                                                  
+           │         self.sR = Boolean()                                                     │                                                                                  
+           │                                                                                 │                                                                                  
+           │     def locals(self):                                                           │                                                                                  
+           │         # Define local variables to keep track of states                        │                                                                                  
+           │         self.timer = Integer()                                                  │                                                                                  
+           │         self.vehicle_detected = Boolean()                                       │                                                                                  
+           │                                                                                 │                                                                                  
+           │     def inputs(self):                                                           │                                                                                  
+           │         # Define input variable for detecting vehicle on secondary road         │                                                                                  
+           │         self.vehicle_detected_input = Boolean()                                 │                                                                                  
+           │                                                                                 │                                                                                  
+           │     def init(self):                                                             │                                                                                  
+           │         # Initialize the timer and vehicle detection                            │                                                                                  
+           │         self.timer = 0                                                          │                                                                                  
+           │         self.vehicle_detected = False                                           │                                                                                  
+           │                                                                                 │                                                                                  
+           │     def next(self):                                                             │                                                                                  
+           │         # Implement the logic for traffic light control                         │                                                                                  
+           │         if self.vehicle_detected_input:                                         │                                                                                  
+           │             # Vehicle detected on secondary road                                │                                                                                  
+           │             self.timer = 5  # Immediately switch to yellow phase for main light │                                                                                  
+           │             self.vehicle_detected = True                                        │                                                                                  
+           │         elif not self.vehicle_detected:                                         │                                                                                  
+           │             # No vehicle detected                                               │                                                                                  
+           │             if self.timer < 60 * 4:                                             │                                                                                  
+           │                 # 4-minute cycle when no vehicle detected                       │                                                                                  
+           │                 self.timer += 1                                                 │                                                                                  
+           │                 if self.timer < 180:  # 3 minutes                               │                                                                                  
+           │                     self.mG = True  # Main light is green                       │                                                                                  
+           │                 elif self.timer < 185:  # 5 seconds                             │                                                                                  
+           │                     self.mG = False                                             │                                                                                  
+           │                     self.mY = True  # Main light is yellow                      │                                                                                  
+           │                 else:                                                           │                                                                                  
+           │                     self.mY = False                                             │                                                                                  
+           │                     self.mR = True  # Main light is red                         │                                                                                  
+           │             else:                                                               │                                                                                  
+           │                 self.timer = 0                                                  │                                                                                  
+           │                 self.vehicle_detected = False                                   │                                                                                  
+           │         else:                                                                   │                                                                                  
+           │             # Vehicle detected but main light is not in green phase             │                                                                                  
+           │             self.timer = 5                                                      │                                                                                  
+           │             self.vehicle_detected = False                                       │                                                                                  
+           │                                                                                 │                                                                                  
+           │         # Update secondary light based on main light state                      │                                                                                  
+           │         if self.timer < 180:  # 3 minutes                                       │                                                                                  
+           │             self.sR = True  # Secondary light is red                            │                                                                                  
+           │         elif self.timer < 290:  # 3 minutes 5 seconds                           │                                                                                  
+           │             self.sR = False                                                     │                                                                                  
+           │             self.sG = True  # Secondary light is green                          │                                                                                  
+           │         elif self.timer < 295:  # 50 seconds                                    │                                                                                  
+           │             self.sG = False                                                     │                                                                                  
+           │             self.sY = True  # Secondary light is yellow                         │                                                                                  
+           │         else:                                                                   │                                                                                  
+           │             self.sY = False                                                     │                                                                                  
+           │             self.sR = True  # Secondary light is red                            │                                                                                  
+           ╰─────────────────────────────────────────────────────────────────────────────────╯                                                                                  
+children:  [TrafficLightController_TrafficLightController!0, Block(empty), Block(cons(LocalDecl(TrafficLightController_vehicle_detected!15,
+                     BooleanTypeHole!16),
+           cons(LocalDecl(TrafficLightController_timer!13,
+                          IntegerTypeHole!14),
+                cons(LocalDecl(TrafficLightController_sY!11,
+                               HoleType!12),
+                     cons(LocalDecl(TrafficLightController_sR!9,
+                                    HoleType!10),
+                          cons(LocalDecl(TrafficLightController_sG!7,
+                                        HoleType!8),
+                               cons(LocalDecl(TrafficLightController_mY!5,
+                                        HoleType!6),
+                                    cons(LocalDecl(TrafficLightController_mR!3,
+                                        HoleType!4),
+                                        cons(LocalDecl(TrafficLightController_mG!1,
+                                        HoleType!2),
+                                        empty))))))))), Block(cons(LocalDecl(TrafficLightController_vehicle_detected_input!17,
+                     BooleanTypeHole!18),
+           empty)), Block(empty), Block(empty), Block(empty), Block(cons(Assignment(FunctionApplication(TrafficLightController_vehicle_detected!15,
+                                        empty),
+                      False!20),
+           cons(Assignment(FunctionApplication(TrafficLightController_timer!13,
+                                        empty),
+                           0!19),
+                empty))), Block(cons(If(LessThan(FunctionApplication(TrafficLightController_timer!13,
+                                        empty),
+                       180!37),
+              Block(cons(Assignment(FunctionApplication(TrafficLightController_sR!9,
+                                        empty),
+                                    True!38),
+                         empty)),
+              Block(cons(If(LessThan(FunctionApplication(TrafficLightController_timer!13,
+                                        empty),
+                                     290!39),
+                            Block(cons(Assignment(FunctionApplication(TrafficLightController_sG!7,
+                                        empty),
+                                        True!41),
+                                       cons(Assignment(FunctionApplication(TrafficLightController_sR!9,
+                                        empty),
+                                        False!40),
+                                        empty))),
+                            Block(cons(If(LessThan(FunctionApplication(TrafficLightController_timer!13,
+                                        empty),
+                                        295!42),
+                                        Block(cons(Assignment(FunctionApplication(TrafficLightController_sY!11,
+                                        empty),
+                                        True!44),
+                                        cons(Assignment(FunctionApplication(TrafficLightController_sG!7,
+                                        empty),
+                                        False!43),
+                                        empty))),
+                                        Block(cons(Assignment(FunctionApplication(TrafficLightController_sR!9,
+                                        empty),
+                                        True!46),
+                                        cons(Assignment(FunctionApplication(TrafficLightController_sY!11,
+                                        empty),
+                                        False!45),
+                                        empty)))),
+                                       empty))),
+                         empty))),
+           cons(If(FunctionApplication(TrafficLightController_vehicle_detected_input!17,
+                                       empty),
+                   Block(cons(Assignment(FunctionApplication(TrafficLightController_vehicle_detected!15,
+                                        empty),
+                                        True!22),
+                              cons(Assignment(FunctionApplication(TrafficLightController_timer!13,
+                                        empty),
+                                        5!21),
+                                   empty))),
+                   Block(cons(If(Not(FunctionApplication(TrafficLightController_vehicle_detected!15,
+                                        empty)),
+                                 Block(cons(If(LessThan(FunctionApplication(TrafficLightController_timer!13,
+                                        empty),
+                                        Multiply(60!23,
+                                        4!24)),
+                                        Block(cons(If(LessThan(FunctionApplication(TrafficLightController_timer!13,
+                                        empty),
+                                        180!26),
+                                        Block(cons(Assignment(FunctionApplication(TrafficLightController_mG!1,
+                                        empty),
+                                        True!27),
+                                        empty)),
+                                        Block(cons(If(LessThan(FunctionApplication(TrafficLightController_timer!13,
+                                        empty),
+                                        185!28),
+                                        Block(cons(Assignment(FunctionApplication(TrafficLightController_mY!5,
+                                        empty),
+                                        True!30),
+                                        cons(Assignment(FunctionApplication(...,
+                                        ...),
+                                        False!29),
+                                        empty))),
+                                        Block(cons(Assignment(FunctionApplication(TrafficLightController_mR!3,
+                                        empty),
+                                        True!32),
+                                        cons(Assignment(FunctionApplication(...,
+                                        ...),
+                                        False!31),
+                                        empty)))),
+                                        empty))),
+                                        cons(Assignment(FunctionApplication(TrafficLightController_timer!13,
+                                        empty),
+                                        Add(FunctionApplication(TrafficLightController_timer!13,
+                                        empty),
+                                        1!25)),
+                                        empty))),
+                                        Block(cons(Assignment(FunctionApplication(TrafficLightController_vehicle_detected!15,
+                                        empty),
+                                        False!34),
+                                        cons(Assignment(FunctionApplication(TrafficLightController_timer!13,
+                                        empty),
+                                        0!33),
+                                        empty)))),
+                                        empty)),
+                                 Block(cons(Assignment(FunctionApplication(TrafficLightController_vehicle_detected!15,
+                                        empty),
+                                        False!36),
+                                        cons(Assignment(FunctionApplication(TrafficLightController_timer!13,
+                                        empty),
+                                        5!35),
+                                        empty)))),
+                              empty))),
+                empty))), True!47, Block(empty)]
+spec:  True!47
+term to type:  term_to_type
+term to type spec:  term_to_type(True!47)
+[11:05:07] ╭───────────── 🤖 Repaired: ──────────────╮                                                                                                               utils.py:24
+           │ class TrafficLightController(Module):   │                                                                                                                          
+           │   def locals(self):                     │                                                                                                                          
+           │     self.mG = bool                      │                                                                                                                          
+           │     self.mR = bool                      │                                                                                                                          
+           │     self.mY = bool                      │                                                                                                                          
+           │     self.sG = bool                      │                                                                                                                          
+           │     self.sR = bool                      │                                                                                                                          
+           │     self.sY = bool                      │                                                                                                                          
+           │     self.timer = int                    │                                                                                                                          
+           │     self.vehicle_detected = bool        │                                                                                                                          
+           │                                         │                                                                                                                          
+           │   def inputs(self):                     │                                                                                                                          
+           │     self.vehicle_detected_input = bool  │                                                                                                                          
+           │                                         │                                                                                                                          
+           │   def init(self):                       │                                                                                                                          
+           │     self.timer = 0                      │                                                                                                                          
+           │     self.vehicle_detected = False       │                                                                                                                          
+           │                                         │                                                                                                                          
+           │   def next(self):                       │                                                                                                                          
+           │     if self.vehicle_detected_input:     │                                                                                                                          
+           │       self.timer = 5                    │                                                                                                                          
+           │       self.vehicle_detected = True      │                                                                                                                          
+           │     else:                               │                                                                                                                          
+           │       if not self.vehicle_detected:     │                                                                                                                          
+           │         if (self.timer < (60 * 4)):     │                                                                                                                          
+           │           self.timer = (self.timer + 1) │                                                                                                                          
+           │           if (self.timer < 180):        │                                                                                                                          
+           │             self.mG = True              │                                                                                                                          
+           │           else:                         │                                                                                                                          
+           │             if (self.timer < 185):      │                                                                                                                          
+           │               self.mG = False           │                                                                                                                          
+           │               self.mY = True            │                                                                                                                          
+           │             else:                       │                                                                                                                          
+           │               self.mY = False           │                                                                                                                          
+           │               self.mR = True            │                                                                                                                          
+           │         else:                           │                                                                                                                          
+           │           self.timer = 0                │                                                                                                                          
+           │           self.vehicle_detected = False │                                                                                                                          
+           │       else:                             │                                                                                                                          
+           │         self.timer = 5                  │                                                                                                                          
+           │         self.vehicle_detected = False   │                                                                                                                          
+           │     if (self.timer < 180):              │                                                                                                                          
+           │       self.sR = True                    │                                                                                                                          
+           │     else:                               │                                                                                                                          
+           │       if (self.timer < 290):            │                                                                                                                          
+           │         self.sR = False                 │                                                                                                                          
+           │         self.sG = True                  │                                                                                                                          
+           │       else:                             │                                                                                                                          
+           │         if (self.timer < 295):          │                                                                                                                          
+           │           self.sG = False               │                                                                                                                          
+           │           self.sY = True                │                                                                                                                          
+           │         else:                           │                                                                                                                          
+           │           self.sY = False               │                                                                                                                          
+           │           self.sR = True                │                                                                                                                          
+           │                                         │                                                                                                                          
+           │                                         │                                                                                                                          
+           ╰─────────────────────────────────────────╯                                                                                                                          
+           ╭────── 🤖 Stats: ──────╮                                                                                                                                 utils.py:24
+           │ Original Lines: 64    │                                                                                                                                            
+           │ Final Lines:    55    │                                                                                                                                            
+           │ LLM Calls:      1     │                                                                                                                                            
+           │ LLM Time:       5.14s │                                                                                                                                            
+           │ Repair Time:    1.11s │                                                                                                                                            
+           ╰───────────────────────╯                                                                                                                                            

@@ -1,0 +1,608 @@
+[11:45:02] ╭───────────────────────────────────────────────────────────────────── 🤖 Prompt: ──────────────────────────────────────────────────────────────────────╮ utils.py:24
+           │ Write Python code that extends the `Module` class below to complete the following task.                                                               │            
+           │                                                                                                                                                       │            
+           │ > Consider a street junction with 4 incoming roads. Each of the 4 roads has a traffic light, which are L1, L2, L3, L4. The traffic light has 4        │            
+           │ states: green, yellow, red, and amber which happen in that order. Write a model of this junction with 4 traffic lights, showing a reasonable          │            
+           │ controller C that switches the green traffic lights in the following order: L1 and L3 together, then L2, then L4. Use the variable names L1, L2, L3,  │            
+           │ L4, green, yellow, red, amber.                                                                                                                        │            
+           │                                                                                                                                                       │            
+           │ Reply with your Python code inside one unique code block.                                                                                             │            
+           │                                                                                                                                                       │            
+           │ ```python                                                                                                                                             │            
+           │ class Module:                                                                                                                                         │            
+           │     """An abstract class to represent a UCLID5 module."""                                                                                             │            
+           │                                                                                                                                                       │            
+           │     def types(self):                                                                                                                                  │            
+           │         """(Optional) Defines the type declarations.                                                                                                  │            
+           │         For example, the following implementation defines a 8-bit type called T:                                                                      │            
+           │         ```                                                                                                                                           │            
+           │         def types(self):                                                                                                                              │            
+           │             self.T = BitVector(8)                                                                                                                     │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def locals(self):                                                                                                                                 │            
+           │         """(Optional) Defines the local variables and their types.                                                                                    │            
+           │         For example, the following implementation defines an 8-bit variable x                                                                         │            
+           │         and an integer variable y:                                                                                                                    │            
+           │         ```                                                                                                                                           │            
+           │         def locals(self):                                                                                                                             │            
+           │             self.x = BitVector(8)                                                                                                                     │            
+           │             self.y = Integer()                                                                                                                        │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def inputs(self):                                                                                                                                 │            
+           │         """(Optional) Defines the input variables and their types.                                                                                    │            
+           │         For example, the following implementation defines an input variable x,                                                                        │            
+           │         which is an array of 8-bit bitvectors indexed by 2-bit bitvectors:                                                                            │            
+           │         ```                                                                                                                                           │            
+           │         def inputs(self):                                                                                                                             │            
+           │             self.x = Array(BitVector(2), BitVector(8))                                                                                                │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def outputs(self):                                                                                                                                │            
+           │         """(Optional) Defines the output variables and their types.                                                                                   │            
+           │         For example, the following implementation defines an output variable y,                                                                       │            
+           │         which is a real number:                                                                                                                       │            
+           │         ```                                                                                                                                           │            
+           │         def outputs(self):                                                                                                                            │            
+           │             self.y = Real()                                                                                                                           │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def shared_vars(self):                                                                                                                            │            
+           │         """(Optional) Defines the shared variables and their types.                                                                                   │            
+           │         For example, the following implementation defines a shared variable z,                                                                        │            
+           │         which is an array of booleans indexed by integers:                                                                                            │            
+           │         ```                                                                                                                                           │            
+           │         def shared_vars(self):                                                                                                                        │            
+           │             self.z = Array(Integer(), Boolean())                                                                                                      │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def instances(self):                                                                                                                              │            
+           │         """(Optional) Defines the instances of other modules and relates their                                                                        │            
+           │         input, output, and shared variables to local variables. Every instance                                                                        │            
+           │         variable must be related to a local variable. For example, let M be                                                                           │            
+           │         another module with inputs x and y, and output z. The following                                                                               │            
+           │         implementation defines an instance of M called m, and connects M's                                                                            │            
+           │         input variable x to the local variable self.a, M's input variable y to                                                                        │            
+           │         the local variable self.b, and M's output variable z to the local                                                                             │            
+           │         variable self.c:                                                                                                                              │            
+           │         ```                                                                                                                                           │            
+           │         def instances(self):                                                                                                                          │            
+           │             self.m = M(x=self.a, y=self.b, z=self.c)                                                                                                  │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def init(self):                                                                                                                                   │            
+           │         """(Optional) Defines how variables are initialized.                                                                                          │            
+           │         For example, the following implementation initializes x to 0 if y is                                                                          │            
+           │         greater than or equal to 20:                                                                                                                  │            
+           │         ```                                                                                                                                           │            
+           │         def init(self):                                                                                                                               │            
+           │             if self.y >= 20:                                                                                                                          │            
+           │                 self.x = 0                                                                                                                            │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def next(self):                                                                                                                                   │            
+           │         """(Optional) Defines the transition relation.                                                                                                │            
+           │         For example, the following implementation increments x or decrements y                                                                        │            
+           │         depending on z:                                                                                                                               │            
+           │         ```                                                                                                                                           │            
+           │         def next(self):                                                                                                                               │            
+           │             if self.z:                                                                                                                                │            
+           │                 self.x = self.x + 1                                                                                                                   │            
+           │             else:                                                                                                                                     │            
+           │                 self.y = self.y - 1                                                                                                                   │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def specification(self):                                                                                                                          │            
+           │         """(Optional) Defines the specification in terms of invariant properties.                                                                     │            
+           │                                                                                                                                                       │            
+           │         Returns:                                                                                                                                      │            
+           │             bool: True if the specification is satisfied, False otherwise.                                                                            │            
+           │                                                                                                                                                       │            
+           │         For example, the following implementation defines two invariants:                                                                             │            
+           │         ```                                                                                                                                           │            
+           │         def specification(self):                                                                                                                      │            
+           │             return self.x < 10 and self.y > 0                                                                                                         │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def proof(self):                                                                                                                                  │            
+           │         """(Optional) Defines the control block.                                                                                                      │            
+           │         For example, the following implementation uses 1-induction to prove                                                                           │            
+           │         that the specification always holds:                                                                                                          │            
+           │         ```                                                                                                                                           │            
+           │         def proof(self):                                                                                                                              │            
+           │             induction(1)                                                                                                                              │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │ ```                                                                                                                                                   │            
+           │                                                                                                                                                       │            
+           │ I can definitely do that! Here is the Python code:                                                                                                    │            
+           │ ```python                                                                                                                                             │            
+           │                                                                                                                                                       │            
+           ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯            
+[11:45:13] ╭────────────────────────── 🧠 Response: ──────────────────────────╮                                                                                      utils.py:42
+           │ class Junction(Module):                                          │                                                                                                 
+           │                                                                  │                                                                                                 
+           │     def types(self):                                             │                                                                                                 
+           │         self.light_states = Enum(4)                              │                                                                                                 
+           │         self.Controller = Enum(5)                                │                                                                                                 
+           │                                                                  │                                                                                                 
+           │     def locals(self):                                            │                                                                                                 
+           │         self.L1 = Enum(4)                                        │                                                                                                 
+           │         self.L2 = Enum(4)                                        │                                                                                                 
+           │         self.L3 = Enum(4)                                        │                                                                                                 
+           │         self.L4 = Enum(4)                                        │                                                                                                 
+           │         self.controller = Enum(5)                                │                                                                                                 
+           │                                                                  │                                                                                                 
+           │     def init(self):                                              │                                                                                                 
+           │         self.L1 = 0                                              │                                                                                                 
+           │         self.L2 = 1                                              │                                                                                                 
+           │         self.L3 = 0                                              │                                                                                                 
+           │         self.L4 = 1                                              │                                                                                                 
+           │         self.controller = 0                                      │                                                                                                 
+           │                                                                  │                                                                                                 
+           │     def next(self):                                              │                                                                                                 
+           │         self.aux1 = self.controller == 0 or self.controller == 2 │                                                                                                 
+           │         self.aux2 = self.controller == 1                         │                                                                                                 
+           │         self.aux3 = self.controller == 3                         │                                                                                                 
+           │         self.aux4 = self.controller == 4                         │                                                                                                 
+           │                                                                  │                                                                                                 
+           │         if self.aux1:                                            │                                                                                                 
+           │             self.L1 = (self.L1 + 1) % 4                          │                                                                                                 
+           │             self.L3 = (self.L3 + 1) % 4                          │                                                                                                 
+           │         if self.aux2:                                            │                                                                                                 
+           │             self.L2 = (self.L2 + 1) % 4                          │                                                                                                 
+           │         if self.aux3:                                            │                                                                                                 
+           │             self.L4 = (self.L4 + 1) % 4                          │                                                                                                 
+           │                                                                  │                                                                                                 
+           │         if self.controller == 4:                                 │                                                                                                 
+           │             self.controller = 0                                  │                                                                                                 
+           │         else:                                                    │                                                                                                 
+           │             self.controller = self.controller + 1                │                                                                                                 
+           │                                                                  │                                                                                                 
+           │     def specification(self):                                     │                                                                                                 
+           │         return self.L1 in [0, 2] and self.L3 in [0, 2]           │                                                                                                 
+           │                                                                  │                                                                                                 
+           │     def proof(self):                                             │                                                                                                 
+           │         induction(1)                                             │                                                                                                 
+           │ ```                                                              │                                                                                                 
+           ╰──────────────────────────────────────────────────────────────────╯                                                                                                 
+           ╭───────────────────────── 🤖 Extracted: ──────────────────────────╮                                                                                      utils.py:24
+           │                                                                  │                                                                                                 
+           │ class Junction(Module):                                          │                                                                                                 
+           │                                                                  │                                                                                                 
+           │     def types(self):                                             │                                                                                                 
+           │         self.light_states = Enum(4)                              │                                                                                                 
+           │         self.Controller = Enum(5)                                │                                                                                                 
+           │                                                                  │                                                                                                 
+           │     def locals(self):                                            │                                                                                                 
+           │         self.L1 = Enum(4)                                        │                                                                                                 
+           │         self.L2 = Enum(4)                                        │                                                                                                 
+           │         self.L3 = Enum(4)                                        │                                                                                                 
+           │         self.L4 = Enum(4)                                        │                                                                                                 
+           │         self.controller = Enum(5)                                │                                                                                                 
+           │                                                                  │                                                                                                 
+           │     def init(self):                                              │                                                                                                 
+           │         self.L1 = 0                                              │                                                                                                 
+           │         self.L2 = 1                                              │                                                                                                 
+           │         self.L3 = 0                                              │                                                                                                 
+           │         self.L4 = 1                                              │                                                                                                 
+           │         self.controller = 0                                      │                                                                                                 
+           │                                                                  │                                                                                                 
+           │     def next(self):                                              │                                                                                                 
+           │         self.aux1 = self.controller == 0 or self.controller == 2 │                                                                                                 
+           │         self.aux2 = self.controller == 1                         │                                                                                                 
+           │         self.aux3 = self.controller == 3                         │                                                                                                 
+           │         self.aux4 = self.controller == 4                         │                                                                                                 
+           │                                                                  │                                                                                                 
+           │         if self.aux1:                                            │                                                                                                 
+           │             self.L1 = (self.L1 + 1) % 4                          │                                                                                                 
+           │             self.L3 = (self.L3 + 1) % 4                          │                                                                                                 
+           │         if self.aux2:                                            │                                                                                                 
+           │             self.L2 = (self.L2 + 1) % 4                          │                                                                                                 
+           │         if self.aux3:                                            │                                                                                                 
+           │             self.L4 = (self.L4 + 1) % 4                          │                                                                                                 
+           │                                                                  │                                                                                                 
+           │         if self.controller == 4:                                 │                                                                                                 
+           │             self.controller = 0                                  │                                                                                                 
+           │         else:                                                    │                                                                                                 
+           │             self.controller = self.controller + 1                │                                                                                                 
+           │                                                                  │                                                                                                 
+           │     def specification(self):                                     │                                                                                                 
+           │         return self.L1 in [0, 2] and self.L3 in [0, 2]           │                                                                                                 
+           │                                                                  │                                                                                                 
+           │     def proof(self):                                             │                                                                                                 
+           │         induction(1)                                             │                                                                                                 
+           ╰──────────────────────────────────────────────────────────────────╯                                                                                                 
+[11:45:14] ╭──────────────────────────── 🤖 Repaired: ─────────────────────────────╮                                                                                 utils.py:24
+           │ class Junction(Module):                                               │                                                                                            
+           │   def locals(self):                                                   │                                                                                            
+           │     self.aux1 = bool                                                  │                                                                                            
+           │     self.aux2 = bool                                                  │                                                                                            
+           │     self.aux3 = bool                                                  │                                                                                            
+           │     self.aux4 = bool                                                  │                                                                                            
+           │     self.L1 = BitVector(8)                                            │                                                                                            
+           │     self.L2 = BitVector(6)                                            │                                                                                            
+           │     self.L3 = BitVector(7)                                            │                                                                                            
+           │     self.L4 = BitVector(5)                                            │                                                                                            
+           │     self.controller = int                                             │                                                                                            
+           │                                                                       │                                                                                            
+           │   def init(self):                                                     │                                                                                            
+           │     self.L1 = BitVectorVal(0, 8)                                      │                                                                                            
+           │     self.L2 = BitVectorVal(1, 6)                                      │                                                                                            
+           │     self.L3 = BitVectorVal(0, 7)                                      │                                                                                            
+           │     self.L4 = BitVectorVal(1, 5)                                      │                                                                                            
+           │     self.controller = 0                                               │                                                                                            
+           │                                                                       │                                                                                            
+           │   def next(self):                                                     │                                                                                            
+           │     self.aux1 = ((self.controller == 0) or (self.controller == 2))    │                                                                                            
+           │     self.aux2 = (self.controller == 1)                                │                                                                                            
+           │     self.aux3 = (self.controller == 3)                                │                                                                                            
+           │     self.aux4 = (self.controller == 4)                                │                                                                                            
+           │     if self.aux1:                                                     │                                                                                            
+           │       self.L1 = ((self.L1 + BitVectorVal(1, 8)) % BitVectorVal(4, 8)) │                                                                                            
+           │       self.L3 = ((self.L3 + BitVectorVal(1, 7)) % BitVectorVal(4, 7)) │                                                                                            
+           │     if self.aux2:                                                     │                                                                                            
+           │       self.L2 = ((self.L2 + BitVectorVal(1, 6)) % BitVectorVal(4, 6)) │                                                                                            
+           │     if self.aux3:                                                     │                                                                                            
+           │       self.L4 = ((self.L4 + BitVectorVal(1, 5)) % BitVectorVal(4, 5)) │                                                                                            
+           │     if (self.controller == 4):                                        │                                                                                            
+           │       self.controller = 0                                             │                                                                                            
+           │     else:                                                             │                                                                                            
+           │       self.controller = (self.controller + 1)                         │                                                                                            
+           │                                                                       │                                                                                            
+           │   def specification(self):                                            │                                                                                            
+           │     return (?? and ??)                                                │                                                                                            
+           │                                                                       │                                                                                            
+           │   def proof(self):                                                    │                                                                                            
+           │     self.induction(1)                                                 │                                                                                            
+           │                                                                       │                                                                                            
+           │                                                                       │                                                                                            
+           ╰───────────────────────────────────────────────────────────────────────╯                                                                                            
+           ╭───────────────────────────────────────────────────────────────────── 🤖 Prompt: ──────────────────────────────────────────────────────────────────────╮ utils.py:24
+           │                                                                                                                                                       │            
+           │ Fix the following Python code by replacing every occurrence of `??` with the correct code.                                                            │            
+           │ ```python                                                                                                                                             │            
+           │ class Junction(Module):                                                                                                                               │            
+           │   def locals(self):                                                                                                                                   │            
+           │     self.aux1 = bool                                                                                                                                  │            
+           │     self.aux2 = bool                                                                                                                                  │            
+           │     self.aux3 = bool                                                                                                                                  │            
+           │     self.aux4 = bool                                                                                                                                  │            
+           │     self.L1 = BitVector(8)                                                                                                                            │            
+           │     self.L2 = BitVector(6)                                                                                                                            │            
+           │     self.L3 = BitVector(7)                                                                                                                            │            
+           │     self.L4 = BitVector(5)                                                                                                                            │            
+           │     self.controller = int                                                                                                                             │            
+           │                                                                                                                                                       │            
+           │   def init(self):                                                                                                                                     │            
+           │     self.L1 = BitVectorVal(0, 8)                                                                                                                      │            
+           │     self.L2 = BitVectorVal(1, 6)                                                                                                                      │            
+           │     self.L3 = BitVectorVal(0, 7)                                                                                                                      │            
+           │     self.L4 = BitVectorVal(1, 5)                                                                                                                      │            
+           │     self.controller = 0                                                                                                                               │            
+           │                                                                                                                                                       │            
+           │   def next(self):                                                                                                                                     │            
+           │     self.aux1 = ((self.controller == 0) or (self.controller == 2))                                                                                    │            
+           │     self.aux2 = (self.controller == 1)                                                                                                                │            
+           │     self.aux3 = (self.controller == 3)                                                                                                                │            
+           │     self.aux4 = (self.controller == 4)                                                                                                                │            
+           │     if self.aux1:                                                                                                                                     │            
+           │       self.L1 = ((self.L1 + BitVectorVal(1, 8)) % BitVectorVal(4, 8))                                                                                 │            
+           │       self.L3 = ((self.L3 + BitVectorVal(1, 7)) % BitVectorVal(4, 7))                                                                                 │            
+           │     if self.aux2:                                                                                                                                     │            
+           │       self.L2 = ((self.L2 + BitVectorVal(1, 6)) % BitVectorVal(4, 6))                                                                                 │            
+           │     if self.aux3:                                                                                                                                     │            
+           │       self.L4 = ((self.L4 + BitVectorVal(1, 5)) % BitVectorVal(4, 5))                                                                                 │            
+           │     if (self.controller == 4):                                                                                                                        │            
+           │       self.controller = 0                                                                                                                             │            
+           │     else:                                                                                                                                             │            
+           │       self.controller = (self.controller + 1)                                                                                                         │            
+           │                                                                                                                                                       │            
+           │   def specification(self):                                                                                                                            │            
+           │     return (?? and ??)                                                                                                                                │            
+           │                                                                                                                                                       │            
+           │   def proof(self):                                                                                                                                    │            
+           │     self.induction(1)                                                                                                                                 │            
+           │                                                                                                                                                       │            
+           │                                                                                                                                                       │            
+           │ ```                                                                                                                                                   │            
+           │ Make sure that your code extends the `Module` class below and that it completes the following task.                                                   │            
+           │                                                                                                                                                       │            
+           │ > Consider a street junction with 4 incoming roads. Each of the 4 roads has a traffic light, which are L1, L2, L3, L4. The traffic light has 4        │            
+           │ states: green, yellow, red, and amber which happen in that order. Write a model of this junction with 4 traffic lights, showing a reasonable          │            
+           │ controller C that switches the green traffic lights in the following order: L1 and L3 together, then L2, then L4. Use the variable names L1, L2, L3,  │            
+           │ L4, green, yellow, red, amber.                                                                                                                        │            
+           │                                                                                                                                                       │            
+           │ Reply with your Python code inside one unique code block.                                                                                             │            
+           │                                                                                                                                                       │            
+           │ ```python                                                                                                                                             │            
+           │ class Module:                                                                                                                                         │            
+           │     """An abstract class to represent a UCLID5 module."""                                                                                             │            
+           │                                                                                                                                                       │            
+           │     def types(self):                                                                                                                                  │            
+           │         """(Optional) Defines the type declarations.                                                                                                  │            
+           │         For example, the following implementation defines a 8-bit type called T:                                                                      │            
+           │         ```                                                                                                                                           │            
+           │         def types(self):                                                                                                                              │            
+           │             self.T = BitVector(8)                                                                                                                     │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def locals(self):                                                                                                                                 │            
+           │         """(Optional) Defines the local variables and their types.                                                                                    │            
+           │         For example, the following implementation defines an 8-bit variable x                                                                         │            
+           │         and an integer variable y:                                                                                                                    │            
+           │         ```                                                                                                                                           │            
+           │         def locals(self):                                                                                                                             │            
+           │             self.x = BitVector(8)                                                                                                                     │            
+           │             self.y = Integer()                                                                                                                        │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def inputs(self):                                                                                                                                 │            
+           │         """(Optional) Defines the input variables and their types.                                                                                    │            
+           │         For example, the following implementation defines an input variable x,                                                                        │            
+           │         which is an array of 8-bit bitvectors indexed by 2-bit bitvectors:                                                                            │            
+           │         ```                                                                                                                                           │            
+           │         def inputs(self):                                                                                                                             │            
+           │             self.x = Array(BitVector(2), BitVector(8))                                                                                                │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def outputs(self):                                                                                                                                │            
+           │         """(Optional) Defines the output variables and their types.                                                                                   │            
+           │         For example, the following implementation defines an output variable y,                                                                       │            
+           │         which is a real number:                                                                                                                       │            
+           │         ```                                                                                                                                           │            
+           │         def outputs(self):                                                                                                                            │            
+           │             self.y = Real()                                                                                                                           │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def shared_vars(self):                                                                                                                            │            
+           │         """(Optional) Defines the shared variables and their types.                                                                                   │            
+           │         For example, the following implementation defines a shared variable z,                                                                        │            
+           │         which is an array of booleans indexed by integers:                                                                                            │            
+           │         ```                                                                                                                                           │            
+           │         def shared_vars(self):                                                                                                                        │            
+           │             self.z = Array(Integer(), Boolean())                                                                                                      │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def instances(self):                                                                                                                              │            
+           │         """(Optional) Defines the instances of other modules and relates their                                                                        │            
+           │         input, output, and shared variables to local variables. Every instance                                                                        │            
+           │         variable must be related to a local variable. For example, let M be                                                                           │            
+           │         another module with inputs x and y, and output z. The following                                                                               │            
+           │         implementation defines an instance of M called m, and connects M's                                                                            │            
+           │         input variable x to the local variable self.a, M's input variable y to                                                                        │            
+           │         the local variable self.b, and M's output variable z to the local                                                                             │            
+           │         variable self.c:                                                                                                                              │            
+           │         ```                                                                                                                                           │            
+           │         def instances(self):                                                                                                                          │            
+           │             self.m = M(x=self.a, y=self.b, z=self.c)                                                                                                  │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def init(self):                                                                                                                                   │            
+           │         """(Optional) Defines how variables are initialized.                                                                                          │            
+           │         For example, the following implementation initializes x to 0 if y is                                                                          │            
+           │         greater than or equal to 20:                                                                                                                  │            
+           │         ```                                                                                                                                           │            
+           │         def init(self):                                                                                                                               │            
+           │             if self.y >= 20:                                                                                                                          │            
+           │                 self.x = 0                                                                                                                            │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def next(self):                                                                                                                                   │            
+           │         """(Optional) Defines the transition relation.                                                                                                │            
+           │         For example, the following implementation increments x or decrements y                                                                        │            
+           │         depending on z:                                                                                                                               │            
+           │         ```                                                                                                                                           │            
+           │         def next(self):                                                                                                                               │            
+           │             if self.z:                                                                                                                                │            
+           │                 self.x = self.x + 1                                                                                                                   │            
+           │             else:                                                                                                                                     │            
+           │                 self.y = self.y - 1                                                                                                                   │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def specification(self):                                                                                                                          │            
+           │         """(Optional) Defines the specification in terms of invariant properties.                                                                     │            
+           │                                                                                                                                                       │            
+           │         Returns:                                                                                                                                      │            
+           │             bool: True if the specification is satisfied, False otherwise.                                                                            │            
+           │                                                                                                                                                       │            
+           │         For example, the following implementation defines two invariants:                                                                             │            
+           │         ```                                                                                                                                           │            
+           │         def specification(self):                                                                                                                      │            
+           │             return self.x < 10 and self.y > 0                                                                                                         │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def proof(self):                                                                                                                                  │            
+           │         """(Optional) Defines the control block.                                                                                                      │            
+           │         For example, the following implementation uses 1-induction to prove                                                                           │            
+           │         that the specification always holds:                                                                                                          │            
+           │         ```                                                                                                                                           │            
+           │         def proof(self):                                                                                                                              │            
+           │             induction(1)                                                                                                                              │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │ ```                                                                                                                                                   │            
+           │                                                                                                                                                       │            
+           │ I can definitely do that! Here is the fixed Python code:                                                                                              │            
+           │ ```python                                                                                                                                             │            
+           │                                                                                                                                                       │            
+           ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯            
+[11:45:18] ╭────────────────────────────────────── 🧠 Response: ──────────────────────────────────────╮                                                              utils.py:42
+           │ ```python                                                                                │                                                                         
+           │ class Junction(Module):                                                                  │                                                                         
+           │     def locals(self):                                                                    │                                                                         
+           │         self.aux1 = bool                                                                 │                                                                         
+           │         self.aux2 = bool                                                                 │                                                                         
+           │         self.aux3 = bool                                                                 │                                                                         
+           │         self.aux4 = bool                                                                 │                                                                         
+           │         self.L1 = BitVector(8)                                                           │                                                                         
+           │         self.L2 = BitVector(6)                                                           │                                                                         
+           │         self.L3 = BitVector(7)                                                           │                                                                         
+           │         self.L4 = BitVector(5)                                                           │                                                                         
+           │         self.controller = int                                                            │                                                                         
+           │                                                                                          │                                                                         
+           │     def init(self):                                                                      │                                                                         
+           │         self.L1 = BitVectorVal(0, 8)                                                     │                                                                         
+           │         self.L2 = BitVectorVal(1, 6)                                                     │                                                                         
+           │         self.L3 = BitVectorVal(0, 7)                                                     │                                                                         
+           │         self.L4 = BitVectorVal(1, 5)                                                     │                                                                         
+           │         self.controller = 0                                                              │                                                                         
+           │                                                                                          │                                                                         
+           │     def next(self):                                                                      │                                                                         
+           │         self.aux1 = ((self.controller == 0) or (self.controller == 2))                   │                                                                         
+           │         self.aux2 = (self.controller == 1)                                               │                                                                         
+           │         self.aux3 = (self.controller == 3)                                               │                                                                         
+           │         self.aux4 = (self.controller == 4)                                               │                                                                         
+           │         if self.aux1:                                                                    │                                                                         
+           │             self.L1 = ((self.L1 + BitVectorVal(1, 8)) % BitVectorVal(4, 8))              │                                                                         
+           │             self.L3 = ((self.L3 + BitVectorVal(1, 7)) % BitVectorVal(4, 7))              │                                                                         
+           │         if self.aux2:                                                                    │                                                                         
+           │             self.L2 = ((self.L2 + BitVectorVal(1, 6)) % BitVectorVal(4, 6))              │                                                                         
+           │         if self.aux3:                                                                    │                                                                         
+           │             self.L4 = ((self.L4 + BitVectorVal(1, 5)) % BitVectorVal(4, 5))              │                                                                         
+           │         if (self.controller == 4):                                                       │                                                                         
+           │             self.controller = 0                                                          │                                                                         
+           │         else:                                                                            │                                                                         
+           │             self.controller = (self.controller + 1)                                      │                                                                         
+           │                                                                                          │                                                                         
+           │     def specification(self):                                                             │                                                                         
+           │         return ((self.L1 == 0) and (self.L3 == 0) and (self.L2 != 0) and (self.L4 != 0)) │                                                                         
+           │                                                                                          │                                                                         
+           │     def proof(self):                                                                     │                                                                         
+           │         self.induction(1)                                                                │                                                                         
+           │ ```                                                                                      │                                                                         
+           ╰──────────────────────────────────────────────────────────────────────────────────────────╯                                                                         
+           ╭───────────────────────────────────── 🤖 Extracted: ──────────────────────────────────────╮                                                              utils.py:24
+           │                                                                                          │                                                                         
+           │ class Junction(Module):                                                                  │                                                                         
+           │     def locals(self):                                                                    │                                                                         
+           │         self.aux1 = bool                                                                 │                                                                         
+           │         self.aux2 = bool                                                                 │                                                                         
+           │         self.aux3 = bool                                                                 │                                                                         
+           │         self.aux4 = bool                                                                 │                                                                         
+           │         self.L1 = BitVector(8)                                                           │                                                                         
+           │         self.L2 = BitVector(6)                                                           │                                                                         
+           │         self.L3 = BitVector(7)                                                           │                                                                         
+           │         self.L4 = BitVector(5)                                                           │                                                                         
+           │         self.controller = int                                                            │                                                                         
+           │                                                                                          │                                                                         
+           │     def init(self):                                                                      │                                                                         
+           │         self.L1 = BitVectorVal(0, 8)                                                     │                                                                         
+           │         self.L2 = BitVectorVal(1, 6)                                                     │                                                                         
+           │         self.L3 = BitVectorVal(0, 7)                                                     │                                                                         
+           │         self.L4 = BitVectorVal(1, 5)                                                     │                                                                         
+           │         self.controller = 0                                                              │                                                                         
+           │                                                                                          │                                                                         
+           │     def next(self):                                                                      │                                                                         
+           │         self.aux1 = ((self.controller == 0) or (self.controller == 2))                   │                                                                         
+           │         self.aux2 = (self.controller == 1)                                               │                                                                         
+           │         self.aux3 = (self.controller == 3)                                               │                                                                         
+           │         self.aux4 = (self.controller == 4)                                               │                                                                         
+           │         if self.aux1:                                                                    │                                                                         
+           │             self.L1 = ((self.L1 + BitVectorVal(1, 8)) % BitVectorVal(4, 8))              │                                                                         
+           │             self.L3 = ((self.L3 + BitVectorVal(1, 7)) % BitVectorVal(4, 7))              │                                                                         
+           │         if self.aux2:                                                                    │                                                                         
+           │             self.L2 = ((self.L2 + BitVectorVal(1, 6)) % BitVectorVal(4, 6))              │                                                                         
+           │         if self.aux3:                                                                    │                                                                         
+           │             self.L4 = ((self.L4 + BitVectorVal(1, 5)) % BitVectorVal(4, 5))              │                                                                         
+           │         if (self.controller == 4):                                                       │                                                                         
+           │             self.controller = 0                                                          │                                                                         
+           │         else:                                                                            │                                                                         
+           │             self.controller = (self.controller + 1)                                      │                                                                         
+           │                                                                                          │                                                                         
+           │     def specification(self):                                                             │                                                                         
+           │         return ((self.L1 == 0) and (self.L3 == 0) and (self.L2 != 0) and (self.L4 != 0)) │                                                                         
+           │                                                                                          │                                                                         
+           │     def proof(self):                                                                     │                                                                         
+           │         self.induction(1)                                                                │                                                                         
+           ╰──────────────────────────────────────────────────────────────────────────────────────────╯                                                                         
+[11:45:19] ╭──────────────────────────────────────────────────────────────────── 🤖 Repaired: ─────────────────────────────────────────────────────────────────────╮ utils.py:24
+           │ class Junction(Module):                                                                                                                               │            
+           │   def locals(self):                                                                                                                                   │            
+           │     self.aux1 = bool                                                                                                                                  │            
+           │     self.aux2 = bool                                                                                                                                  │            
+           │     self.aux3 = bool                                                                                                                                  │            
+           │     self.aux4 = bool                                                                                                                                  │            
+           │     self.L1 = BitVector(8)                                                                                                                            │            
+           │     self.L2 = BitVector(6)                                                                                                                            │            
+           │     self.L3 = BitVector(7)                                                                                                                            │            
+           │     self.L4 = BitVector(5)                                                                                                                            │            
+           │     self.controller = int                                                                                                                             │            
+           │                                                                                                                                                       │            
+           │   def init(self):                                                                                                                                     │            
+           │     self.L1 = BitVectorVal(0, 8)                                                                                                                      │            
+           │     self.L2 = BitVectorVal(1, 6)                                                                                                                      │            
+           │     self.L3 = BitVectorVal(0, 7)                                                                                                                      │            
+           │     self.L4 = BitVectorVal(1, 5)                                                                                                                      │            
+           │     self.controller = 0                                                                                                                               │            
+           │                                                                                                                                                       │            
+           │   def next(self):                                                                                                                                     │            
+           │     self.aux1 = ((self.controller == 0) or (self.controller == 2))                                                                                    │            
+           │     self.aux2 = (self.controller == 1)                                                                                                                │            
+           │     self.aux3 = (self.controller == 3)                                                                                                                │            
+           │     self.aux4 = (self.controller == 4)                                                                                                                │            
+           │     if self.aux1:                                                                                                                                     │            
+           │       self.L1 = ((self.L1 + BitVectorVal(1, 8)) % BitVectorVal(4, 8))                                                                                 │            
+           │       self.L3 = ((self.L3 + BitVectorVal(1, 7)) % BitVectorVal(4, 7))                                                                                 │            
+           │     if self.aux2:                                                                                                                                     │            
+           │       self.L2 = ((self.L2 + BitVectorVal(1, 6)) % BitVectorVal(4, 6))                                                                                 │            
+           │     if self.aux3:                                                                                                                                     │            
+           │       self.L4 = ((self.L4 + BitVectorVal(1, 5)) % BitVectorVal(4, 5))                                                                                 │            
+           │     if (self.controller == 4):                                                                                                                        │            
+           │       self.controller = 0                                                                                                                             │            
+           │     else:                                                                                                                                             │            
+           │       self.controller = (self.controller + 1)                                                                                                         │            
+           │                                                                                                                                                       │            
+           │   def specification(self):                                                                                                                            │            
+           │     return ((((self.L1 == BitVectorVal(0, 8)) and (self.L3 == BitVectorVal(0, 7))) and (self.L2 != BitVectorVal(0, 6))) and (self.L4 !=               │            
+           │ BitVectorVal(0, 5)))                                                                                                                                  │            
+           │                                                                                                                                                       │            
+           │   def proof(self):                                                                                                                                    │            
+           │     self.induction(1)                                                                                                                                 │            
+           │                                                                                                                                                       │            
+           │                                                                                                                                                       │            
+           ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯            
+           ╭────── 🤖 Stats: ───────╮                                                                                                                                utils.py:24
+           │ Original Lines: 45     │                                                                                                                                           
+           │ Final Lines:    42     │                                                                                                                                           
+           │ LLM Calls:      2      │                                                                                                                                           
+           │ LLM Time:       14.46s │                                                                                                                                           
+           │ Repair Time:    2.51s  │                                                                                                                                           
+           ╰────────────────────────╯                                                                                                                                           

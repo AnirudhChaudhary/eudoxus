@@ -1,0 +1,40 @@
+module Module {
+  var temp: integer;
+  var heatOn: boolean;
+  var heatOff: boolean;
+  var time: integer;
+
+  init {
+    temp = 21;
+    heatOn = false;
+    heatOff = true;
+    time = 0;
+
+  }
+  procedure step()
+    modifies time;
+    modifies heatOn;
+    modifies heatOff;
+  {
+    if (temp <= 20) {
+      heatOn = true;
+      heatOff = false;
+    } else {
+      if ((temp > 20) && (time >= 30)) {
+        heatOn = false;
+        heatOff = true;
+        if (temp <= 20) {
+          heatOn = true;
+          heatOff = false;
+          time = 0;
+        }
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+  invariant spec: (((heatOn && !heatOff) && (temp <= 20)) && !(time >= 30));
+
+}

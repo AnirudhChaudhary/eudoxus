@@ -1,0 +1,31 @@
+module Module {
+  var b1: boolean;
+  var b2: boolean;
+  var x: enum { 1, 2 };
+
+  procedure step()
+    modifies x;
+    modifies b2;
+    modifies b1;
+  {
+    b1 = true;
+    if (x == 1) {
+      b2 = true;
+      x = 2;
+    }
+    if (b1 && b2) {
+      x = (if (x == 2) then 1 else 2);
+      b2 = false;
+    }
+    if (b1 && (x == 2)) {
+      b2 = false;
+    }
+    if (b2 && (x == 1)) {
+      b1 = false;
+    }
+  }
+
+  next {
+    call step();
+  }
+}

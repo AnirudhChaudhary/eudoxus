@@ -1,0 +1,26 @@
+module Module {
+  var busy: boolean;
+  var next_status: enum { ready };
+  var request: boolean;
+  var status: enum { busy, ready };
+
+  procedure step()
+    modifies next_status;
+    modifies status;
+    modifies busy;
+  {
+    busy = request;
+    next_status = status;
+    if (request) {
+      busy = true;
+    } else {
+      busy = false;
+      next_status = ready;
+    }
+    status = next_status;
+  }
+
+  next {
+    call step();
+  }
+}

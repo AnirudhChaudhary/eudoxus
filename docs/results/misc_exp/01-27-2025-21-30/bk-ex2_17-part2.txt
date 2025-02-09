@@ -1,0 +1,383 @@
+[21:30:41] ╭───────────────────────────────────────────────────────────────────── 🤖 Prompt: ──────────────────────────────────────────────────────────────────────╮ utils.py:24
+           │ Write Python code that extends the `Module` class below to complete the following task.                                                               │            
+           │                                                                                                                                                       │            
+           │ > Consider the transition systems of two traffic lights for nonintersecting (i.e., parallel) roads. It is assumed that the traffic lights switch      │            
+           │ completely independent of each other. For example, the traffic lights may be controlled by pedestrians who would like to cross the road. Model a      │            
+           │ parallel composition of two traffic lights. Model each traffic light as a simple transition system with two states, one state modeling a red light,   │            
+           │ the other one modeling a green light.  In principle, any form of interlocking of the "actions" of the two traffic lights is possible. For instance,   │            
+           │ in the initial state where both traffic lights are red, there is a non-deterministic choice between which of the lights turns green. Note that this   │            
+           │ nondeterminism is descriptive, and does not model a scheduling problem between the traffic lights (although it may seem so). Use the variable names   │            
+           │ red1, green1, red2 and green 2.                                                                                                                       │            
+           │                                                                                                                                                       │            
+           │ Reply with your Python code inside one unique code block.                                                                                             │            
+           │                                                                                                                                                       │            
+           │ ```python                                                                                                                                             │            
+           │ class Module:                                                                                                                                         │            
+           │     """An abstract class to represent a UCLID5 module."""                                                                                             │            
+           │                                                                                                                                                       │            
+           │     def types(self):                                                                                                                                  │            
+           │         """(Optional) Defines the type declarations.                                                                                                  │            
+           │         For example, the following implementation defines a 8-bit type called T:                                                                      │            
+           │         ```                                                                                                                                           │            
+           │         def types(self):                                                                                                                              │            
+           │             self.T = BitVector(8)                                                                                                                     │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def locals(self):                                                                                                                                 │            
+           │         """(Optional) Defines the local variables and their types.                                                                                    │            
+           │         For example, the following implementation defines an 8-bit variable x                                                                         │            
+           │         and an integer variable y:                                                                                                                    │            
+           │         ```                                                                                                                                           │            
+           │         def locals(self):                                                                                                                             │            
+           │             self.x = BitVector(8)                                                                                                                     │            
+           │             self.y = Integer()                                                                                                                        │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def inputs(self):                                                                                                                                 │            
+           │         """(Optional) Defines the input variables and their types.                                                                                    │            
+           │         For example, the following implementation defines an input variable x,                                                                        │            
+           │         which is an array of 8-bit bitvectors indexed by 2-bit bitvectors:                                                                            │            
+           │         ```                                                                                                                                           │            
+           │         def inputs(self):                                                                                                                             │            
+           │             self.x = Array(BitVector(2), BitVector(8))                                                                                                │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def outputs(self):                                                                                                                                │            
+           │         """(Optional) Defines the output variables and their types.                                                                                   │            
+           │         For example, the following implementation defines an output variable y,                                                                       │            
+           │         which is a real number:                                                                                                                       │            
+           │         ```                                                                                                                                           │            
+           │         def outputs(self):                                                                                                                            │            
+           │             self.y = Real()                                                                                                                           │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def shared_vars(self):                                                                                                                            │            
+           │         """(Optional) Defines the shared variables and their types.                                                                                   │            
+           │         For example, the following implementation defines a shared variable z,                                                                        │            
+           │         which is an array of booleans indexed by integers:                                                                                            │            
+           │         ```                                                                                                                                           │            
+           │         def shared_vars(self):                                                                                                                        │            
+           │             self.z = Array(Integer(), Boolean())                                                                                                      │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def instances(self):                                                                                                                              │            
+           │         """(Optional) Defines the instances of other modules and relates their                                                                        │            
+           │         input, output, and shared variables to local variables. Every instance                                                                        │            
+           │         variable must be related to a local variable. For example, let M be                                                                           │            
+           │         another module with inputs x and y, and output z. The following                                                                               │            
+           │         implementation defines an instance of M called m, and connects M's                                                                            │            
+           │         input variable x to the local variable self.a, M's input variable y to                                                                        │            
+           │         the local variable self.b, and M's output variable z to the local                                                                             │            
+           │         variable self.c:                                                                                                                              │            
+           │         ```                                                                                                                                           │            
+           │         def instances(self):                                                                                                                          │            
+           │             self.m = M(x=self.a, y=self.b, z=self.c)                                                                                                  │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def init(self):                                                                                                                                   │            
+           │         """(Optional) Defines how variables are initialized.                                                                                          │            
+           │         For example, the following implementation initializes x to 0 if y is                                                                          │            
+           │         greater than or equal to 20:                                                                                                                  │            
+           │         ```                                                                                                                                           │            
+           │         def init(self):                                                                                                                               │            
+           │             if self.y >= 20:                                                                                                                          │            
+           │                 self.x = 0                                                                                                                            │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def next(self):                                                                                                                                   │            
+           │         """(Optional) Defines the transition relation.                                                                                                │            
+           │         For example, the following implementation increments x or decrements y                                                                        │            
+           │         depending on z:                                                                                                                               │            
+           │         ```                                                                                                                                           │            
+           │         def next(self):                                                                                                                               │            
+           │             if self.z:                                                                                                                                │            
+           │                 self.x = self.x + 1                                                                                                                   │            
+           │             else:                                                                                                                                     │            
+           │                 self.y = self.y - 1                                                                                                                   │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def specification(self):                                                                                                                          │            
+           │         """(Optional) Defines the specification in terms of invariant properties.                                                                     │            
+           │                                                                                                                                                       │            
+           │         Returns:                                                                                                                                      │            
+           │             bool: True if the specification is satisfied, False otherwise.                                                                            │            
+           │                                                                                                                                                       │            
+           │         For example, the following implementation defines two invariants:                                                                             │            
+           │         ```                                                                                                                                           │            
+           │         def specification(self):                                                                                                                      │            
+           │             return self.x < 10 and self.y > 0                                                                                                         │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │                                                                                                                                                       │            
+           │     def proof(self):                                                                                                                                  │            
+           │         """(Optional) Defines the control block.                                                                                                      │            
+           │         For example, the following implementation uses 1-induction to prove                                                                           │            
+           │         that the specification always holds:                                                                                                          │            
+           │         ```                                                                                                                                           │            
+           │         def proof(self):                                                                                                                              │            
+           │             induction(1)                                                                                                                              │            
+           │         ```                                                                                                                                           │            
+           │         """                                                                                                                                           │            
+           │         pass                                                                                                                                          │            
+           │ ```                                                                                                                                                   │            
+           │                                                                                                                                                       │            
+           │ I can definitely do that! Here is the Python code:                                                                                                    │            
+           │ ```python                                                                                                                                             │            
+           │                                                                                                                                                       │            
+           ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯            
+[21:30:44] ╭──────────────────────────────────────────────────────────────────── 🧠 Response: ─────────────────────────────────────────────────────────────────────╮ utils.py:42
+           │ class TrafficLights(Module):                                                                                                                          │            
+           │     def types(self):                                                                                                                                  │            
+           │         self.State = Boolean()                                                                                                                        │            
+           │                                                                                                                                                       │            
+           │     def locals(self):                                                                                                                                 │            
+           │         self.red1 = self.State                                                                                                                        │            
+           │         self.green1 = self.State                                                                                                                      │            
+           │         self.red2 = self.State                                                                                                                        │            
+           │         self.green2 = self.State                                                                                                                      │            
+           │                                                                                                                                                       │            
+           │     def init(self):                                                                                                                                   │            
+           │         self.red1 = True                                                                                                                              │            
+           │         self.red2 = True                                                                                                                              │            
+           │                                                                                                                                                       │            
+           │     def next(self):                                                                                                                                   │            
+           │         if self.red1 and self.red2:                                                                                                                   │            
+           │             if nondet():                                                                                                                              │            
+           │                 self.red1 = False                                                                                                                     │            
+           │             else:                                                                                                                                     │            
+           │                 self.red2 = False                                                                                                                     │            
+           │         elif self.red1 and not self.red2:                                                                                                             │            
+           │             self.green2 = True                                                                                                                        │            
+           │             self.red1 = False                                                                                                                         │            
+           │         elif not self.red1 and self.red2:                                                                                                             │            
+           │             self.green1 = True                                                                                                                        │            
+           │             self.red2 = False                                                                                                                         │            
+           │         elif not self.red1 and not self.red2:                                                                                                         │            
+           │             self.green2 = False                                                                                                                       │            
+           │             self.red1 = True                                                                                                                          │            
+           │ ```                                                                                                                                                   │            
+           │ This code defines a module called `TrafficLights` that models a parallel composition of two traffic lights. Each traffic light can be in a state of   │            
+           │ red or green, and the transition between these states is controlled non-deterministically. The initial state is where both lights are red, and from   │            
+           │ there, each light can transition to green while the other remains red.                                                                                │            
+           ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯            
+           ╭──────────────── 🤖 Extracted: ────────────────╮                                                                                                         utils.py:24
+           │                                               │                                                                                                                    
+           │ class TrafficLights(Module):                  │                                                                                                                    
+           │     def types(self):                          │                                                                                                                    
+           │         self.State = Boolean()                │                                                                                                                    
+           │                                               │                                                                                                                    
+           │     def locals(self):                         │                                                                                                                    
+           │         self.red1 = self.State                │                                                                                                                    
+           │         self.green1 = self.State              │                                                                                                                    
+           │         self.red2 = self.State                │                                                                                                                    
+           │         self.green2 = self.State              │                                                                                                                    
+           │                                               │                                                                                                                    
+           │     def init(self):                           │                                                                                                                    
+           │         self.red1 = True                      │                                                                                                                    
+           │         self.red2 = True                      │                                                                                                                    
+           │                                               │                                                                                                                    
+           │     def next(self):                           │                                                                                                                    
+           │         if self.red1 and self.red2:           │                                                                                                                    
+           │             if nondet():                      │                                                                                                                    
+           │                 self.red1 = False             │                                                                                                                    
+           │             else:                             │                                                                                                                    
+           │                 self.red2 = False             │                                                                                                                    
+           │         elif self.red1 and not self.red2:     │                                                                                                                    
+           │             self.green2 = True                │                                                                                                                    
+           │             self.red1 = False                 │                                                                                                                    
+           │         elif not self.red1 and self.red2:     │                                                                                                                    
+           │             self.green1 = True                │                                                                                                                    
+           │             self.red2 = False                 │                                                                                                                    
+           │         elif not self.red1 and not self.red2: │                                                                                                                    
+           │             self.green2 = False               │                                                                                                                    
+           │             self.red1 = True                  │                                                                                                                    
+           ╰───────────────────────────────────────────────╯                                                                                                                    
+[21:30:45] ╭───────────────── 🤖 Repaired: ──────────────────╮                                                                                                       utils.py:24
+           │ class TrafficLights(Module):                    │                                                                                                                  
+           │   def types(self):                              │                                                                                                                  
+           │     self.State = bool                           │                                                                                                                  
+           │                                                 │                                                                                                                  
+           │   def locals(self):                             │                                                                                                                  
+           │     self.nondet_1 = bool                        │                                                                                                                  
+           │     self.red1 = self.State                      │                                                                                                                  
+           │     self.green1 = self.State                    │                                                                                                                  
+           │     self.red2 = self.State                      │                                                                                                                  
+           │     self.green2 = self.State                    │                                                                                                                  
+           │                                                 │                                                                                                                  
+           │   def init(self):                               │                                                                                                                  
+           │     self.red1 = True                            │                                                                                                                  
+           │     self.red2 = True                            │                                                                                                                  
+           │                                                 │                                                                                                                  
+           │   def next(self):                               │                                                                                                                  
+           │     Havoc(self.nondet_1)                        │                                                                                                                  
+           │     if (self.red1 and self.red2):               │                                                                                                                  
+           │       if self.nondet_1:                         │                                                                                                                  
+           │         self.red1 = False                       │                                                                                                                  
+           │       else:                                     │                                                                                                                  
+           │         self.red2 = False                       │                                                                                                                  
+           │     else:                                       │                                                                                                                  
+           │       if (self.red1 and not self.red2):         │                                                                                                                  
+           │         self.green2 = True                      │                                                                                                                  
+           │         self.red1 = False                       │                                                                                                                  
+           │       else:                                     │                                                                                                                  
+           │         if (not self.red1 and self.red2):       │                                                                                                                  
+           │           self.green1 = True                    │                                                                                                                  
+           │           self.red2 = False                     │                                                                                                                  
+           │         else:                                   │                                                                                                                  
+           │           if (not self.red1 and not self.red2): │                                                                                                                  
+           │             self.green2 = False                 │                                                                                                                  
+           │             self.red1 = True                    │                                                                                                                  
+           │                                                 │                                                                                                                  
+           │                                                 │                                                                                                                  
+           ╰─────────────────────────────────────────────────╯                                                                                                                  
+[21:30:59] ╭───────────────────────────────────────────────────────────────────── 🤖 Prompt:  ─────────────────────────────────────────────────────────────────────╮ utils.py:24
+           │ You are an expert in formal methods, specializing in generating system properties and specifications. Your task is to generate invariants and LTL     │            
+           │ specifications for a system based on its natural language description.                                                                                │            
+           │ Guidelines:                                                                                                                                           │            
+           │      1. Invariants: Identify properties that must hold true in all states of the system. These are conditions that are always true regardless of the  │            
+           │ system's execution path.                                                                                                                              │            
+           │      2. LTL Specifications: Formulate Linear Temporal Logic properties that capture temporal behaviors of the system. These properties should         │            
+           │ describe relationships or constraints that hold over time (e.g., safety, liveness, fairness).                                                         │            
+           │ Input:                                                                                                                                                │            
+           │          I will provide you witha  natural language description of the system, including:                                                             │            
+           │              * The components and their interactions.             * The desired behaviors of the system.             * Any constraints, safety, or    │            
+           │ performance requirements.                                                                                                                             │            
+           │ Output:                                                                                                                                               │            
+           │          * A list of invariants expressed in mathematical notation         * A list of LTL Specifications in standard syntax (e.g., G (p -> Fq),      │            
+           │ where G is 'Globally' and F is 'Eventually').         * Explanations for each property, detailing why it is relevant and representative of the        │            
+           │ system.                                                                                                                                               │            
+           │ Consider the transition systems of two traffic lights for nonintersecting (i.e., parallel) roads. It is assumed that the traffic lights switch        │            
+           │ completely independent of each other. For example, the traffic lights may be controlled by pedestrians who would like to cross the road.              │            
+           │                                                                                                                                                       │            
+           │ Model a parallel composition of two traffic lights. Model each traffic light as a simple transition system with two states, one state modeling a red  │            
+           │ light, the other one modeling a green light.                                                                                                          │            
+           │                                                                                                                                                       │            
+           │                                                                                                                                                       │            
+           │ In principle, any form of interlocking of the "actions" of the two traffic lights is possible. For instance, in the initial state where both traffic  │            
+           │ lights are red, there is a non-deterministic choice between which of the lights turns green. Note that this nondeterminism is descriptive, and does   │            
+           │ not model a scheduling problem between the traffic lights (although it may seem so).                                                                  │            
+           │                                                                                                                                                       │            
+           │ Use the variable names red1, green1, red2 and green 2.                                                                                                │            
+           │                                                                                                                                                       │            
+           ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯            
+           ╭─────────────────────────────────────────────────────────────────── 🧠 Properties:  ───────────────────────────────────────────────────────────────────╮ utils.py:42
+           │ ### Invariants for the Traffic Light System                                                                                                           │            
+           │                                                                                                                                                       │            
+           │ Given the description of the two independent traffic lights controlling parallel roads, and using the variables red1, green1 for the first traffic    │            
+           │ light, and red2, green2 for the second traffic light, we can identify the following invariants:                                                       │            
+           │                                                                                                                                                       │            
+           │ 1. **Exclusive State Invariant**: At any given time, each traffic light should be in exactly one state – either red or green, but not both and        │            
+           │ neither stateless. Thus, for each traffic light:                                                                                                      │            
+           │    - \( \text{red1} \leftrightarrow \neg \text{green1} \)                                                                                             │            
+           │    - \( \text{red2} \leftrightarrow \neg \text{green2} \)                                                                                             │            
+           │                                                                                                                                                       │            
+           │    **Explanation**: The light must be either red or green, not both. This invariant ensures that the traffic light system does not enter an undefined │            
+           │ or hazardous state.                                                                                                                                   │            
+           │                                                                                                                                                       │            
+           │ 2. **Consistency Invariant**: There is no time where both traffic lights are in an undefined state or in a state where both are non-red or non-green  │            
+           │ simultaneously:                                                                                                                                       │            
+           │    - \( (\text{red1} \vee \text{green1}) \)                                                                                                           │            
+           │    - \( (\text{red2} \vee \text{green2}) \)                                                                                                           │            
+           │                                                                                                                                                       │            
+           │    **Explanation**: This invariant enforces that each traffic light is always operational (i.e., displaying either red or green), preventing any      │            
+           │ breakdown in traffic control.                                                                                                                         │            
+           │                                                                                                                                                       │            
+           │ ### LTL Specifications for the Traffic Light System                                                                                                   │            
+           │                                                                                                                                                       │            
+           │ LTL (Linear Temporal Logic) is used to describe the sequence of permissible or expected states or actions. For the described traffic light system,    │            
+           │ consider the following:                                                                                                                               │            
+           │                                                                                                                                                       │            
+           │ 1. **Safety Specification**:                                                                                                                          │            
+           │    - \( \text{G} (\text{green1} \rightarrow \text{F} \text{red1}) \)                                                                                  │            
+           │    - \( \text{G} (\text{green2} \rightarrow \text{F} \text{red2}) \)                                                                                  │            
+           │                                                                                                                                                       │            
+           │    **Explanation**: Globally, if a light is green, it is eventually followed by red. This ensures that each traffic light will not remain green       │            
+           │ indefinitely, allowing for safe road usage and pedestrian crossing.                                                                                   │            
+           │                                                                                                                                                       │            
+           │ 2. **Liveness Specification**:                                                                                                                        │            
+           │    - \( \text{G} (\text{red1} \rightarrow \text{F} \text{green1}) \)                                                                                  │            
+           │    - \( \text{G} (\text{red2} \rightarrow \text{F} \text{green2}) \)                                                                                  │            
+           │                                                                                                                                                       │            
+           │    **Explanation**: This specification states that globally, if the light is red, it will eventually turn green. This guarantees that traffic does    │            
+           │ not stall indefinitely at a red light.                                                                                                                │            
+           │                                                                                                                                                       │            
+           │ 3. **Fairness Specification** (given the non-determinism and parallel control):                                                                       │            
+           │    - \( \text{G} (\text{FGred1} \wedge \text{FGgreen1}) \)                                                                                            │            
+           │    - \( \text{G} (\text{FGred2} \wedge \text{FGgreen2}) \)                                                                                            │            
+           │                                                                                                                                                       │            
+           │    **Explanation**: This property ensures that each light goes through an infinite number of cycles of red and green over time. It addresses the      │            
+           │ system's fairness and effectiveness by guaranteeing that no single state predominates endlessly.                                                      │            
+           │                                                                                                                                                       │            
+           │ These LTL specifications align with maintaining a safe, functioning, and fair traffic control system, crucial for managing parallel road crossings    │            
+           │ effectively. They are formulated to capture both requirements of safety (no light stays green forever) and liveness (no light stays red forever),     │            
+           │ crucial for efficient and accident-free traffic management.                                                                                           │            
+           ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯            
+[21:31:20] ╭──────────────────────────────────────────────────────────────────── 🧠 Response:  ────────────────────────────────────────────────────────────────────╮ utils.py:42
+           │ ### Evaluation of the Traffic Light Model                                                                                                             │            
+           │                                                                                                                                                       │            
+           │ #### Exclusive State Invariant                                                                                                                        │            
+           │ The model initializes both `red1` and `red2` to `True`, without initializing `green1` and `green2`. The evolution of states relies on a               │            
+           │ non-deterministic choice (`nondet_1`). It appears the code lacks mutual exclusivity enforcement directly between `red1` and `green1`, as well as      │            
+           │ between `red2` and `green2`. Since `green1` and `green2` are assigned `True` only when `red1` or `red2` transition from `True` to `False`, there is a │            
+           │ possibility that a light could be neither red nor green due to lack of initialization and direct logical linkage. This falls short of satisfying the  │            
+           │ required invariant that \( \text{red1} \leftrightarrow \neg \text{green1} \) and \( \text{red2} \leftrightarrow \neg \text{green2} \).                │            
+           │                                                                                                                                                       │            
+           │ **Grade Impact**: This likely contributes to a score decrease. Grade = 3 as this invariant is not strictly enforced in every condition.               │            
+           │                                                                                                                                                       │            
+           │ #### Consistency Invariant                                                                                                                            │            
+           │ The model allows for scenarios where both traffic lights might not reflect a clear state of being `red` or `green` (e.g., after initialization and    │            
+           │ during transitions influenced by `nondet_1`). This contrasts with the requirement \( (\text{red1} \vee \text{green1}) \) and \( (\text{red2} \vee     │            
+           │ \text{green2}) \). These expressions must always be `True`, but the undefined initialization of `green1` and `green2` does not guarantee this         │            
+           │ condition conclusively.                                                                                                                               │            
+           │                                                                                                                                                       │            
+           │ **Grade Impact**: Inconsistencies in maintaining traffic lights in a definable state affects the grading. Grade = 3.                                  │            
+           │                                                                                                                                                       │            
+           │ #### Safety Specification                                                                                                                             │            
+           │ The model does not explicitly guarantee that a green state will be followed by a red state universally (`\text{G} (\text{green1} \rightarrow \text{F} │            
+           │ \text{red1})` and `\text{G} (\text{green2} \rightarrow \text{F} \text{red2})`). During the non-deterministic transition, a light might indefinitely   │            
+           │ stay green under a specific sequence of `nondet_1` values without ever switching back to red if the `next` method's conditions are met repeatedly.    │            
+           │                                                                                                                                                       │            
+           │ **Grade Impact**: This impacts the model's safety specification adherence and contributes negatively to the grade. Grade = 2.                         │            
+           │                                                                                                                                                       │            
+           │ #### Liveness Specification                                                                                                                           │            
+           │ The given model may violate the liveness specification (`\text{G} (\text{red1} \rightarrow \text{F} \text{green1})` and `\text{G} (\text{red2}        │            
+           │ \rightarrow \text{F} \text{green2})`) by potentially locking a green light out of a transition back to red and thus failing the subsequent return to  │            
+           │ green.                                                                                                                                                │            
+           │                                                                                                                                                       │            
+           │ **Grade Impact**: The real risk of non-progressing traffic states adversely impacts the grading. Grade = 2.                                           │            
+           │                                                                                                                                                       │            
+           │ #### Fairness Specification                                                                                                                           │            
+           │ Given the model relies heavily on the arbitrary non-deterministic Boolean `nondet_1`, the actual transition cycle (red to green, green to red) might  │            
+           │ not be fair or guaranteed indefinitely. The implementation details do not provide firm assurance that each light will alternate between red and green │            
+           │ infinitely often.                                                                                                                                     │            
+           │                                                                                                                                                       │            
+           │ **Grade Impact**: The absent guarantee of infinite alternation hampers this property and thus the grade. Grade = 2.                                   │            
+           │                                                                                                                                                       │            
+           │ ### Final Grading                                                                                                                                     │            
+           │ Considering all aspects and the properties against which the Traffic Light model is evaluated, a final grade would be 2 ("incorrect with minor        │            
+           │ correct portions"). The primary shortcomings lie in the lack of explicit mutual exclusivity handling, proper initialization of states, and a clear    │            
+           │ mechanism to ensure transition properties necessary for traffic light control systems for both safety and liveness.                                   │            
+           ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯            
+           ╭────── 🤖 Stats: ──────╮                                                                                                                                 utils.py:24
+           │ Original Lines: 30    │                                                                                                                                            
+           │ Final Lines:    35    │                                                                                                                                            
+           │ LLM Calls:      1     │                                                                                                                                            
+           │ LLM Time:       2.91s │                                                                                                                                            
+           │ Repair Time:    0.68s │                                                                                                                                            
+           ╰───────────────────────╯                                                                                                                                            

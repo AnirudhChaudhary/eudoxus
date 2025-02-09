@@ -1,0 +1,40 @@
+module RailroadSystem {
+  var TrainState: record {  };
+  var controller_state: integer;
+  var train_state: ??;
+  var gate_state: bv1;
+
+  next {
+    if (controller_state == 0) {
+      if (train_state == TrainState.far) {
+        controller_state' = 1;
+      } else {
+        if (controller_state == 1) {
+          if (gate_state == 0bv1) {
+            controller_state' = 2;
+          }
+        } else {
+          if (controller_state == 2) {
+            if (train_state == TrainState.in) {
+              controller_state' = 3;
+            }
+          } else {
+            if (controller_state == 3) {
+              if (gate_state == 1bv1) {
+                controller_state' = 0;
+              }
+            }
+          }
+        }
+      }
+    }
+    if ((controller_state == 1) || (controller_state == 2)) {
+      gate_state' = 1bv1;
+    } else {
+      gate_state' = 0bv1;
+    }
+
+  }
+  invariant spec: (gate_state == train_state[1]);
+
+}

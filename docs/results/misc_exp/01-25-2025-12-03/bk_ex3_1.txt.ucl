@@ -1,0 +1,41 @@
+module TrafficLights {
+  var green1: boolean;
+  var green2: boolean;
+  var red1: boolean;
+  var red2: boolean;
+  var traffic_light1: boolean;
+  var traffic_light2: boolean;
+  var A: boolean;
+  var B: boolean;
+
+  init {
+    traffic_light1 = red1;
+    traffic_light2 = green2;
+
+  }
+  procedure step()
+    modifies traffic_light2;
+    modifies traffic_light1;
+  {
+    if ((A && (traffic_light1 == red1)) && (traffic_light2 == green2)) {
+      traffic_light1 = green1;
+      traffic_light2 = red2;
+    }
+    if ((B && (traffic_light1 == green1)) && (traffic_light2 == red2)) {
+      traffic_light1 = red1;
+      traffic_light2 = green2;
+    }
+  }
+
+  next {
+    call step();
+  }
+  invariant spec: !((traffic_light1 == red1) && (traffic_light2 == red2));
+
+  control {
+    induction(1);
+    check;
+    print_results;
+
+  }
+}

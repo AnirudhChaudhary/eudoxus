@@ -1,0 +1,66 @@
+module ABP {
+  type Bit = boolean;
+  type BitVec2 = bv2;
+
+  var ack: boolean;
+  var message1: bv8;
+  var message2: BitVec2;
+  var st: bv1;
+  var sender_state: bv1;
+  var receiver_state: bv1;
+
+  input send_message1: Bit;
+  input send_message2: Bit;
+  input receiver_ack: Bit;
+
+  output sender_ack: boolean;
+
+  init {
+    sender_state = 0bv1;
+    receiver_state = 0bv1;
+
+  }
+  next {
+    if (st == 0bv1) {
+      if (sender_state == 0bv1) {
+        if (send_message1) {
+          message1' = message1;
+          st' = 1bv1;
+        } else {
+          st' = 0bv1;
+        }
+      } else {
+        if (sender_state == 1bv1) {
+          if (send_message2) {
+            message2' = (message2 + 1bv2);
+            st' = 1bv1;
+          } else {
+            st' = 0bv1;
+          }
+        }
+      }
+    } else {
+      if (receiver_state == sender_state) {
+        sender_ack' = receiver_ack;
+      }
+      if (st == 1bv1) {
+        if ((receiver_state == 0bv1) && send_message1) {
+          receiver_state' = 1bv1;
+        } else {
+          receiver_state' = 0bv1;
+        }
+      } else {
+        if (st == 0bv1) {
+          if ((receiver_state == 1bv1) && send_message2) {
+            receiver_state' = 1bv1;
+          } else {
+            receiver_state' = 0bv1;
+          }
+        }
+      }
+    }
+
+  }
+  invariant spec: (sender_ack == ack);
+
+}

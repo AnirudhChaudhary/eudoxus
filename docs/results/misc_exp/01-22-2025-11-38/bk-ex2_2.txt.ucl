@@ -1,0 +1,30 @@
+module VendingMachine {
+  type Bit = boolean;
+
+  var beer_ready: boolean;
+  var soda_ready: boolean;
+  var state: bv2;
+  var action: bv2;
+  var coin_inserted: Bit;
+
+  input insert_coin: Bit;
+
+  output get_soda: Bit;
+  output get_beer: Bit;
+
+  init {
+    coin_inserted = false;
+
+  }
+  next {
+    state' = state;
+    soda_ready' = ((state == 2bv2) && (action == 0bv2));
+    beer_ready' = ((state == 3bv2) && (action == 1bv2));
+    get_soda' = (if (soda_ready) then soda_ready else get_soda);
+    get_beer' = (if (beer_ready) then beer_ready else get_beer);
+    coin_inserted' = (if (insert_coin) then insert_coin else coin_inserted);
+
+  }
+  invariant spec: (insert_coin && (get_soda || get_beer));
+
+}
